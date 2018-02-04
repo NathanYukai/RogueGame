@@ -1,0 +1,22 @@
+{
+  "name": "tsgame",
+  "version": "1.0.0",
+  "description": "test game",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "yukai",
+  "license": "ISC",
+  "dependencies": {
+    "expose-loader": "^0.7.4",
+    "phaser-ce": "^2.10.0",
+    "script-loader": "^0.7.2"
+  },
+  "devDependencies": {
+    "awesome-typescript-loader": "^3.4.1",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.7.1",
+    "webpack": "^3.10.0"
+  }
+}
