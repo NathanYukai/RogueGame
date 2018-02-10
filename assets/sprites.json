@@ -1,0 +1,24 @@
+{
+    "basic":[
+        {
+            "type": "spritesheet",
+            "key": "human",
+            "url": "assets/Human/human_regular_hair.png",
+            "frameWidth": 20,
+            "frameHeight": 20,
+            "frameMax": 1,
+            "margin": 0,
+            "spacing": 0
+        },
+        {
+            "type": "spritesheet",
+            "key": "troll",
+            "url": "assets/Troll/troll_regular_hair.png",
+            "frameWidth": 20,
+            "frameHeight": 20,
+            "frameMax": 1,
+            "margin": 0,
+            "spacing": 0
+        }
+    ]
+}
