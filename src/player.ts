@@ -1,18 +1,14 @@
-import 'phaser-ce'
-import { Sprite, GameObjectFactory, Key } from 'phaser-ce';
+import * as Phaser from 'phaser-ce'
+import { Sprite, GameObjectFactory, Key, Game } from 'phaser-ce';
 
-export class Player {
-    health : number;
-    sprite : Sprite;
-
-    constructor (factory: GameObjectFactory, x:number, y:number, key:string, hp: number = 10){
-        this.sprite = factory.sprite(x,y,key);
+export class Player extends Phaser.Sprite {
+    constructor (game: Phaser.Game, x:number, y:number, key:string, hp: number = 100){
+        super(game, x, y, key);
+        this.anchor.setTo(0.5,0.5);
+        this.maxHealth = hp;
         this.health = hp;
-    }
 
-    move(x: number, y:number): void{
-        this.sprite.x += x;
-        this.sprite.y += y;
+        game.add.existing(this);
     }
 
     controllPlayer(up: Key, down: Key, left: Key, right: Key): void{
@@ -29,7 +25,12 @@ export class Player {
         }else if(right.isDown){
             xMove ++;
         }
-        this.move(xMove, yMove);
+
+        this.body.velocity.x = 0;
+        this.body.velocity.y = 0;
+
+        this.body.velocity.x = xMove * 200;
+        this.body.velocity.y = yMove * 200
     }
 
 }

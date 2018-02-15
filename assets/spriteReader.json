@@ -19,6 +19,16 @@
             "frameMax": 1,
             "margin": 0,
             "spacing": 0
+        },
+        {
+            "type": "spritesheet",
+            "key": "items",
+            "url": "assets/Sheet.png",
+            "frameWidth": 16,
+            "frameHeight": 16,
+            "frameMax": 2,
+            "margin": 0,
+            "spacing": 0
         }
     ]
 }

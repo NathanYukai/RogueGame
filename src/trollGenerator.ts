@@ -1,15 +1,15 @@
 import {Troll} from './troll'
-import { GameObjectFactory } from 'phaser-ce';
+import * as Phaser from 'phaser-ce';
 
 export class TrollGenerator{
-    factory: GameObjectFactory;
+    game: Phaser.Game;
 
-    constructor(factory: GameObjectFactory){
-        this.factory = factory;
+    constructor(game: Phaser.Game){
+        this.game = game;
     }
 
     getOneTroll(x = 100, y = 100): Troll{
-        let troll = new Troll(this.factory, x, y, 'troll', 10, 5);
+        let troll = new Troll(this.game, x, y, 'troll', 10, 5);
         return troll
     }
 }

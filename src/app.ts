@@ -1,8 +1,9 @@
-import 'phaser-ce';
-import { Sprite, Physics, Key, } from 'phaser-ce';
+import * as Phaser from 'phaser-ce';
+import { Sprite, Physics, Key, Keyboard, } from 'phaser-ce';
 import {Player} from './player'
 import { TrollGenerator } from './trollGenerator';
-import { Troll } from './troll';
+import { Troll, sendDamage } from './troll';
+import { PlayerWeapon } from './playerweapon';
 
 window.onload = function() {
 
@@ -13,7 +14,7 @@ window.onload = function() {
     game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update:update, render:render});
 
     function preload () {
-        game.load.pack('basic', 'assets/sprites.json');
+        game.load.pack('basic', 'assets/spriteReader.json');
     }
 
     let upKey: Key;
@@ -22,31 +23,59 @@ window.onload = function() {
     let rightKey: Key;
 
     let player: Player;
+    let items: PlayerWeapon;
 
-    let troll: Troll;
+    let trolls: Troll[] = [];
     function create () {
 
         game.stage.backgroundColor = '#182d3b';
         game.physics.startSystem(Physics.ARCADE);
-        objectFactory = game.add;
-        trollGenerator = new TrollGenerator(objectFactory);
+        trollGenerator = new TrollGenerator(game);
 
-        player = new Player(objectFactory, game.world.centerX, game.world.centerY, 'human');
-        troll = trollGenerator.getOneTroll(50,50);
+        player = new Player(game, game.world.centerX, game.world.centerY, 'human');
 
-        upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
-        downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-        leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-        rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-    }
+        items = new PlayerWeapon(game, player.x+100, player.y, 'items');
+        items.setOwner(player);
+
+        for(let i = 0; i < 9; i++){
+            trolls[i] = trollGenerator.getOneTroll(50+i*20, 100);
+        }
+
+        game.physics.arcade.enable(player)
+        game.physics.arcade.enable(trolls);
+        game.physics.arcade.enable(items);
+
+        setUpKeys(game.input.keyboard);
+
+   }
 
     function update() {
         player.controllPlayer(upKey, downKey, leftKey, rightKey);
-        game.physics.arcade.moveToObject(troll.sprite, player.sprite,5)
+        items.relativeRotate()
+
+        game.physics.arcade.collide(trolls, trolls)
+
+        for(let troll of trolls){
+            if(troll.exists){
+                let close: boolean = game.physics.arcade.distanceBetween(troll, player) < 10;
+                let speed = close? 0 : 200
+                game.physics.arcade.moveToObject(troll, player, speed);
+                game.physics.arcade.overlap(troll, player, sendDamage)
+            }
+        }
     }
+
 
     function render() {
     }
 
+    function setUpKeys(keyboard:Keyboard){
+        upKey = keyboard.addKey(Phaser.Keyboard.UP);
+        downKey = keyboard.addKey(Phaser.Keyboard.DOWN);
+        leftKey = keyboard.addKey(Phaser.Keyboard.LEFT);
+        rightKey = keyboard.addKey(Phaser.Keyboard.RIGHT);
+    }
 };
+
+
 

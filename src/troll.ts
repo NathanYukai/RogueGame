@@ -1,20 +1,21 @@
-import 'phaser-ce'
-import { Sprite, GameObjectFactory } from 'phaser-ce';
+import * as Phaser from 'phaser-ce'
+import { Sprite, GameObjectFactory, Game } from 'phaser-ce';
 import { Player } from './player';
 
-export class Troll {
-    health: number;
+export class Troll extends Sprite{
     power: number;
-    sprite: Sprite;
 
-    constructor (factory: GameObjectFactory, x:number, y:number, key:string, hp = 10 , power = 5){
-        this.sprite = factory.sprite(x,y,key);
-        this.health = hp;
+    constructor (game: Phaser.Game, x:number, y:number, key:string, hp = 10 , power = 5){
+        super(game, x,y, key);
+        this.anchor.setTo(0.5,0.5);
         this.power = power;
+        this.maxHealth = hp;
+        game.add.existing(this);
     }
 
-    move(x: number, y: number): void{
-        this.sprite.x += x;
-        this.sprite.y += y;
-    }
+}
+
+export function sendDamage(troll: Troll, player: Player){
+    troll.destroy();
+    player.damage(troll.power);
 }
