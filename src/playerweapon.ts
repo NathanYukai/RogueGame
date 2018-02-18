@@ -50,8 +50,14 @@ export class PlayerWeapon extends Sprite {
         this.y = this.owner.y + this.distance*(Math.sin(angle))
     }
 
-    public getPower():number{
+    getPower():number{
         return this.power;
+    }
+
+    update(){
+    }
+
+    onOverlap(weapon:PlayerWeapon, enemy: Sprite){
     }
 
 }

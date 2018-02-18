@@ -4,15 +4,15 @@ import {Player} from './player'
 import { TrollGenerator } from './trollGenerator';
 import { Troll, sendDamage } from './troll';
 import { PlayerWeapon } from './playerweapon';
-import { Sword} from './sword'
+import { SwordProtector} from './swordProtector'
+import { spreadWeaponOnRail } from './utils';
 
 window.onload = function() {
 
-    let game: Phaser.Game;
-    let objectFactory: Phaser.GameObjectFactory;
     let trollGenerator: TrollGenerator;
+    const game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update:update, render:render});
 
-    game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update:update, render:render});
+    let arcadePhysics: Physics.Arcade;
 
     function preload () {
         game.load.pack('basic', 'assets/spriteReader.json');
@@ -24,10 +24,12 @@ window.onload = function() {
     let rightKey: Key;
 
     let player: Player;
-    let sword: PlayerWeapon;
+    let weapons: PlayerWeapon[];
 
     let trolls: Troll[] = [];
     function create () {
+        weapons = [];
+        arcadePhysics = game.physics.arcade;
 
         game.stage.backgroundColor = '#182d3b';
         game.physics.startSystem(Physics.ARCADE);
@@ -35,33 +37,42 @@ window.onload = function() {
 
         player = new Player(game, game.world.centerX, game.world.centerY, 'human');
 
-        sword = new Sword(game, player.x+300, player.y, 'items');
-        sword.setOwner(player);
+        weapons[0] = new SwordProtector(game, player.x, player.y-100, 'items',undefined,undefined,1);
 
-        for(let i = 0; i < 9; i++){
-            trolls[i] = trollGenerator.getOneTroll(50+i*20, 100);
+        spreadWeaponOnRail(weapons, player, 100, 0.02)
+
+        for(let w of weapons){
+            w.setOwner(player);
+            arcadePhysics.enable(w);
         }
 
-        game.physics.arcade.enable(player)
-        game.physics.arcade.enable(trolls);
-        game.physics.arcade.enable(sword);
+        for(let i = 0; i < 2; i++){
+            trolls[i] = trollGenerator.getOneTroll(50+i*20, 100, undefined, 20);
+        }
+
+        arcadePhysics.enable(player)
+        arcadePhysics.enable(trolls);
 
         setUpKeys(game.input.keyboard);
+        console.log(trolls[0].health)
 
    }
 
     function update() {
         player.controllPlayer(upKey, downKey, leftKey, rightKey);
-        sword.followRotate();
+        for(let w of weapons){
+            w.update();
+            arcadePhysics.overlap(w, trolls, w.onOverlap);
+        }
 
-        game.physics.arcade.collide(trolls, trolls)
+        arcadePhysics.collide(trolls, trolls)
 
         for(let troll of trolls){
             if(troll.exists){
-                let close: boolean = game.physics.arcade.distanceBetween(troll, player) < 10;
-                let speed = close? 0 : 200
-                game.physics.arcade.moveToObject(troll, player, speed);
-                game.physics.arcade.overlap(troll, player, sendDamage)
+                let close: boolean = arcadePhysics.distanceBetween(troll, player) < 10;
+                let speed = close? 0 : 50
+                arcadePhysics.moveToObject(troll, player, speed);
+                arcadePhysics.overlap(troll, player, sendDamage)
             }
         }
     }

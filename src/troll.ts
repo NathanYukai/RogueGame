@@ -10,6 +10,7 @@ export class Troll extends Sprite{
         this.anchor.setTo(0.5,0.5);
         this.power = power;
         this.maxHealth = hp;
+        this.health = hp;
         game.add.existing(this);
     }
 
