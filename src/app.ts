@@ -4,6 +4,7 @@ import {Player} from './player'
 import { TrollGenerator } from './trollGenerator';
 import { Troll, sendDamage } from './troll';
 import { PlayerWeapon } from './playerweapon';
+import { Sword} from './sword'
 
 window.onload = function() {
 
@@ -23,7 +24,7 @@ window.onload = function() {
     let rightKey: Key;
 
     let player: Player;
-    let items: PlayerWeapon;
+    let sword: PlayerWeapon;
 
     let trolls: Troll[] = [];
     function create () {
@@ -34,8 +35,8 @@ window.onload = function() {
 
         player = new Player(game, game.world.centerX, game.world.centerY, 'human');
 
-        items = new PlayerWeapon(game, player.x+100, player.y, 'items');
-        items.setOwner(player);
+        sword = new Sword(game, player.x+300, player.y, 'items');
+        sword.setOwner(player);
 
         for(let i = 0; i < 9; i++){
             trolls[i] = trollGenerator.getOneTroll(50+i*20, 100);
@@ -43,7 +44,7 @@ window.onload = function() {
 
         game.physics.arcade.enable(player)
         game.physics.arcade.enable(trolls);
-        game.physics.arcade.enable(items);
+        game.physics.arcade.enable(sword);
 
         setUpKeys(game.input.keyboard);
 
@@ -51,7 +52,7 @@ window.onload = function() {
 
     function update() {
         player.controllPlayer(upKey, downKey, leftKey, rightKey);
-        items.relativeRotate()
+        sword.followRotate();
 
         game.physics.arcade.collide(trolls, trolls)
 
@@ -75,6 +76,7 @@ window.onload = function() {
         leftKey = keyboard.addKey(Phaser.Keyboard.LEFT);
         rightKey = keyboard.addKey(Phaser.Keyboard.RIGHT);
     }
+
 };
 
 
