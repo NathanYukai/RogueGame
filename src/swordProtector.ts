@@ -1,5 +1,6 @@
 import {PlayerWeapon} from './playerweapon'
 import { Sprite } from 'phaser-ce';
+import { Enemy } from './enemy';
 
 enum swordState {
     ATTACK,
@@ -24,7 +25,7 @@ export class SwordProtector extends PlayerWeapon {
         this.attackFrameCountDown = frame;
     }
 
-    update(){
+    weaponUpdate(enemies: Enemy[]){
         this.followRotate();
 
         if(this.state == swordState.ATTACK){

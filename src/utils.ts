@@ -21,3 +21,5 @@ export function spreadWeaponOnRail(
         w.y = player.y + radius * (Math.sin(thisAngle));
     }
 }
+
+export const rpgItemSpriteKey = 'rpgItems';

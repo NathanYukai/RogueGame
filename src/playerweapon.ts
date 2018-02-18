@@ -1,23 +1,25 @@
 import * as Phaser from 'phaser-ce'
 import { Sprite } from 'phaser-ce';
 import { Player}from './player'
+import { Enemy } from './enemy';
 
 export class PlayerWeapon extends Sprite {
 
     protected owner: Sprite;
     protected rAngle: number;
-    protected distance: number;
-    protected rotateSpd: number;
+    protected distance = 100;
+    protected rotateSpd = 0.02;
     protected power: number;
 
-    constructor(game: Phaser.Game, x:number, y:number, key:string, distance = 100, rotateSpd = 0.02, power = 5){
-        super(game, x, y, key);
+    protected faceNorthAngle = 3/4 * Math.PI;
+
+    constructor(game: Phaser.Game, x:number, y:number, key:string, frame: number, power = 5){
+        super(game, x, y, key, frame);
 
         this.anchor.setTo(0.5,0.5);
-        this.distance = distance;
-        this.rotateSpd = rotateSpd;
         this.power = power;
         game.add.existing(this);
+        game.physics.arcade.enable(this);
     }
 
     setOwner(owner: Sprite){
@@ -54,7 +56,7 @@ export class PlayerWeapon extends Sprite {
         return this.power;
     }
 
-    update(){
+    weaponUpdate(enemies: Enemy[]){
     }
 
     onOverlap(weapon:PlayerWeapon, enemy: Sprite){

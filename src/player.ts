@@ -9,6 +9,7 @@ export class Player extends Phaser.Sprite {
         this.health = hp;
 
         game.add.existing(this);
+        game.physics.arcade.enable(this);
     }
 
     controllPlayer(up: Key, down: Key, left: Key, right: Key): void{

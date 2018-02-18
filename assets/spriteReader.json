@@ -22,11 +22,11 @@
         },
         {
             "type": "spritesheet",
-            "key": "items",
+            "key": "rpgItems",
             "url": "assets/Sheet.png",
             "frameWidth": 16,
             "frameHeight": 16,
-            "frameMax": 2,
+            "frameMax": 72,
             "margin": 0,
             "spacing": 0
         }

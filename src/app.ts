@@ -2,10 +2,12 @@ import * as Phaser from 'phaser-ce';
 import { Sprite, Physics, Key, Keyboard, } from 'phaser-ce';
 import {Player} from './player'
 import { TrollGenerator } from './trollGenerator';
-import { Troll, sendDamage } from './troll';
+import { Troll } from './troll';
 import { PlayerWeapon } from './playerweapon';
 import { SwordProtector} from './swordProtector'
-import { spreadWeaponOnRail } from './utils';
+import { spreadWeaponOnRail, rpgItemSpriteKey} from './utils';
+import { rpgItem } from './rpgItemEnum';
+import { BasicGun } from './basicGun';
 
 window.onload = function() {
 
@@ -27,6 +29,7 @@ window.onload = function() {
     let weapons: PlayerWeapon[];
 
     let trolls: Troll[] = [];
+
     function create () {
         weapons = [];
         arcadePhysics = game.physics.arcade;
@@ -37,7 +40,8 @@ window.onload = function() {
 
         player = new Player(game, game.world.centerX, game.world.centerY, 'human');
 
-        weapons[0] = new SwordProtector(game, player.x, player.y-100, 'items',undefined,undefined,1);
+        weapons[0] = new SwordProtector(game, player.x, player.y-100, rpgItemSpriteKey, rpgItem.BasicSword,1);
+        weapons[1] = new BasicGun(game, 0,0, rpgItemSpriteKey, rpgItem.Bow,1);
 
         spreadWeaponOnRail(weapons, player, 100, 0.02)
 
@@ -46,22 +50,17 @@ window.onload = function() {
             arcadePhysics.enable(w);
         }
 
-        for(let i = 0; i < 2; i++){
+        for(let i = 0; i < 1; i++){
             trolls[i] = trollGenerator.getOneTroll(50+i*20, 100, undefined, 20);
         }
 
-        arcadePhysics.enable(player)
-        arcadePhysics.enable(trolls);
-
         setUpKeys(game.input.keyboard);
-        console.log(trolls[0].health)
-
    }
 
     function update() {
         player.controllPlayer(upKey, downKey, leftKey, rightKey);
         for(let w of weapons){
-            w.update();
+            w.weaponUpdate(trolls);
             arcadePhysics.overlap(w, trolls, w.onOverlap);
         }
 
@@ -72,7 +71,7 @@ window.onload = function() {
                 let close: boolean = arcadePhysics.distanceBetween(troll, player) < 10;
                 let speed = close? 0 : 50
                 arcadePhysics.moveToObject(troll, player, speed);
-                arcadePhysics.overlap(troll, player, sendDamage)
+                arcadePhysics.overlap(troll, player, troll.onOverlap)
             }
         }
     }
