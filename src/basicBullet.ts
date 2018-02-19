@@ -14,6 +14,8 @@ export class BasicBullet extends Sprite{
         this.spd = spd;
         this.rotation = 3/4 * Math.PI + dir;
 
+        this.checkWorldBounds = true;
+        this.outOfBoundsKill = true;
         game.add.existing(this);
         game.physics.arcade.enable(this);
 
@@ -23,7 +25,7 @@ export class BasicBullet extends Sprite{
         body.velocity.y = this.spd * Math.sin(dir)
     }
 
-    update(){
+    public getPower():number {
+        return this.power;
     }
-
 }
