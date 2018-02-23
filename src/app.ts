@@ -40,7 +40,7 @@ window.onload = function() {
 
         player = new Player(game, game.world.centerX, game.world.centerY, 'human');
 
-        weapons[0] = new SwordProtector(game, player.x, player.y-100, rpgItemSpriteKey, rpgItem.BasicSword,1);
+        weapons[0] = new SwordProtector(game, player.x, player.y-100, rpgItemSpriteKey, rpgItem.BasicSword,5);
         weapons[1] = new BasicGun(game, 0,0, rpgItemSpriteKey, rpgItem.Bow,1);
 
         spreadWeaponOnRail(weapons, player, 100, 0.02)
@@ -50,9 +50,12 @@ window.onload = function() {
             arcadePhysics.enable(w);
         }
 
+        let circleTrolls = trollGenerator.getTrollsInCircle(player.x,player.y,5,5,150);
+
         for(let i = 0; i < 1; i++){
             trolls[i] = trollGenerator.getOneTroll(50+i*20, 100, undefined, 20);
         }
+        trolls = trolls.concat(circleTrolls);
 
         setUpKeys(game.input.keyboard);
    }

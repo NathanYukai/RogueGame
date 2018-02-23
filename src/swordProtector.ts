@@ -3,12 +3,13 @@ import { Sprite } from 'phaser-ce';
 import { Enemy } from './enemy';
 
 enum swordState {
+    READY,
     ATTACK,
     REST
 }
 
 export class SwordProtector extends PlayerWeapon {
-    private coolDownFrame = 60
+    private coolDownFrame = 120
     private coolDownCount = 0;
     private attackFrame = 20;
     private attackFrameCountDown = this.attackFrame;
@@ -28,7 +29,9 @@ export class SwordProtector extends PlayerWeapon {
     weaponUpdate(enemies: Enemy[]){
         this.followRotate();
 
-        if(this.state == swordState.ATTACK){
+        switch(this.state){
+        case swordState.ATTACK:
+            this.alpha = 1;
             this.rotation += 0.5;
             this.attackFrameCountDown --;
 
@@ -38,22 +41,28 @@ export class SwordProtector extends PlayerWeapon {
                 this.state = swordState.REST;
                 this.attackFrameCountDown = this.attackFrame;
             }
-        }else{
+            return;
+        case swordState.READY:
+            this.alpha = 1;
+            return;
+        case swordState.REST:
+        default:
+            this.alpha = 0.5;
             this.coolDownCount++;
             if(this.coolDownCount >= this.coolDownFrame){
-                this.state = swordState.ATTACK;
+                this.state = swordState.READY;
                 this.coolDownCount = 0;
             }
         }
     }
 
     onOverlap(weapon: SwordProtector, enemy: Sprite){
+        if(weapon.state == swordState.READY){
+            weapon.state = swordState.ATTACK
+        }
         if(weapon.state == swordState.ATTACK && !weapon.damagedEnemy.has(enemy)){
-            console.log(weapon.power);
-            console.log(enemy.health)
             enemy.damage(weapon.power);
             weapon.damagedEnemy.add(enemy);
-            console.log("dmg")
         }
     }
 }

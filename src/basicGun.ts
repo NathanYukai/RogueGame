@@ -34,11 +34,10 @@ export class BasicGun extends PlayerWeapon{
             this.coolDownCount = this.coolDownFrame;
 
             let bb = new BasicBullet(this.game, this.x, this.y, rpgItemSpriteKey, rpgItem.Spear,
-                                     1, 300, this.rotation - this.faceNorthAngle);
+                                     this.power, 300, this.rotation - this.faceNorthAngle);
             this.bullets.add(bb);
         }
 
-        console.log(this.bullets.size)
         this.updateBullets();
         this.game.physics.arcade.overlap(enemies, Array.from(this.bullets.values()), this.onBulletOverlap);
     }
@@ -46,7 +45,6 @@ export class BasicGun extends PlayerWeapon{
     private updateBullets(){
         for(let b of this.bullets){
             if(! b.alive){
-                console.log("---")
                 this.bullets.delete(b);
             }
         }
