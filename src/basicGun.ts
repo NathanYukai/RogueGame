@@ -4,18 +4,16 @@ import { Enemy } from './enemy';
 import { BasicBullet } from './basicBullet';
 import { rpgItemSpriteKey } from './utils';
 import { rpgItem } from './rpgItemEnum';
+import { BASICGUN_DEFAULT_COOLDOWN, BASICGUN_DEFAULT_POWER, BASICBULLET_DEFAULT_SPEED } from './config';
 
 export class BasicGun extends PlayerWeapon{
-    private coolDownFrame = 10;
+    private coolDownFrame = BASICGUN_DEFAULT_COOLDOWN
     private coolDownCount = 0;
-    private physics: Physics.Arcade;
-
     private bullets: Set<BasicBullet>;
 
-    constructor(game: Phaser.Game, x: number, y:number, key:string, frame:number, power=5){
+    constructor(game: Phaser.Game, x: number, y:number, key:string, frame:number,
+                power=BASICGUN_DEFAULT_POWER){
         super(game, x, y, key, frame, power);
-        this.game = game;
-        this.physics = game.physics.arcade;
         this.bullets = new Set();
     }
 
@@ -26,15 +24,15 @@ export class BasicGun extends PlayerWeapon{
     weaponUpdate(enemies: Enemy[]){
         this.followRotate();
 
-        let closestEnemy = this.physics.closest(this, enemies);
-        this.rotation = this.physics.angleBetween(this, closestEnemy) + this.faceNorthAngle;
+        let closestEnemy = this.game.physics.arcade.closest(this, enemies);
+        this.rotation = this.game.physics.arcade.angleBetween(this, closestEnemy) + this.faceNorthAngle;
 
         this.coolDownCount --;
         if(this.coolDownCount <=0){
             this.coolDownCount = this.coolDownFrame;
 
             let bb = new BasicBullet(this.game, this.x, this.y, rpgItemSpriteKey, rpgItem.Spear,
-                                     this.power, 300, this.rotation - this.faceNorthAngle);
+                                     this.power, BASICBULLET_DEFAULT_SPEED, this.rotation - this.faceNorthAngle);
             this.bullets.add(bb);
         }
 

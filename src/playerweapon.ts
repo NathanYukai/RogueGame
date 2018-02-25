@@ -2,16 +2,19 @@ import * as Phaser from 'phaser-ce'
 import { Sprite } from 'phaser-ce';
 import { Player}from './player'
 import { Enemy } from './enemy';
+import { WEAPON_DISTANCE, WEAPON_ROTATION_SPD, WEAPON_45_CLOCKWISE_ROTATION } from './config';
 
 export class PlayerWeapon extends Sprite {
 
     protected owner: Sprite;
     protected rAngle: number;
-    protected distance = 100;
-    protected rotateSpd = 0.02;
+    protected distance = WEAPON_DISTANCE;
+    protected rotateSpd = WEAPON_ROTATION_SPD;
     protected power: number;
+    protected coolDownInFrame: number;
+    protected specialLevel: number;
 
-    protected faceNorthAngle = 3/4 * Math.PI;
+    protected faceNorthAngle = WEAPON_45_CLOCKWISE_ROTATION;
 
     constructor(game: Phaser.Game, x:number, y:number, key:string, frame: number, power = 5){
         super(game, x, y, key, frame);
@@ -41,12 +44,6 @@ export class PlayerWeapon extends Sprite {
         this.rAngle = angle
     }
 
-    weakRotate(){
-        let crtAngle = Math.atan2(this.y - this.owner.y, this.x - this.owner.x);
-        let angle = crtAngle + this.rotateSpd;
-        this.setPosition(angle);
-    }
-
     private setPosition(angle: number){
         this.x = this.owner.x + this.distance*(Math.cos(angle))
         this.y = this.owner.y + this.distance*(Math.sin(angle))
@@ -60,6 +57,15 @@ export class PlayerWeapon extends Sprite {
     }
 
     onOverlap(weapon:PlayerWeapon, enemy: Sprite){
+    }
+
+    onPowerUpgrade(){
+    }
+
+    onSpeedUpgrade(){
+    }
+
+    onSpecialUpgrade(){
     }
 
 }

@@ -8,6 +8,9 @@ import { SwordProtector} from './swordProtector'
 import { spreadWeaponOnRail, rpgItemSpriteKey} from './utils';
 import { rpgItem } from './rpgItemEnum';
 import { BasicGun } from './basicGun';
+import { Pickup } from './Pickup';
+import { FreezeGun } from './freezeGun';
+import { WEAPON_DISTANCE, WEAPON_ROTATION_SPD } from './config';
 
 window.onload = function() {
 
@@ -34,7 +37,7 @@ window.onload = function() {
         weapons = [];
         arcadePhysics = game.physics.arcade;
 
-        game.stage.backgroundColor = '#182d3b';
+        game.stage.backgroundColor = '#1a6286';
         game.physics.startSystem(Physics.ARCADE);
         trollGenerator = new TrollGenerator(game);
 
@@ -42,8 +45,8 @@ window.onload = function() {
 
         weapons[0] = new SwordProtector(game, player.x, player.y-100, rpgItemSpriteKey, rpgItem.BasicSword,5);
         weapons[1] = new BasicGun(game, 0,0, rpgItemSpriteKey, rpgItem.Bow,1);
-
-        spreadWeaponOnRail(weapons, player, 100, 0.02)
+        weapons[2] = new FreezeGun(game, 0,0, rpgItemSpriteKey, rpgItem.Wand, 1);
+        spreadWeaponOnRail(weapons, player, WEAPON_DISTANCE, WEAPON_ROTATION_SPD)
 
         for(let w of weapons){
             w.setOwner(player);
@@ -56,6 +59,8 @@ window.onload = function() {
             trolls[i] = trollGenerator.getOneTroll(50+i*20, 100, undefined, 20);
         }
         trolls = trolls.concat(circleTrolls);
+
+        let pickup = new Pickup(game, 300,300,rpgItemSpriteKey, rpgItem.ShieldGold, 600);
 
         setUpKeys(game.input.keyboard);
    }
@@ -71,9 +76,7 @@ window.onload = function() {
 
         for(let troll of trolls){
             if(troll.exists){
-                let close: boolean = arcadePhysics.distanceBetween(troll, player) < 10;
-                let speed = close? 0 : 50
-                arcadePhysics.moveToObject(troll, player, speed);
+                arcadePhysics.moveToObject(troll, player, troll.getSpeedCurrent());
                 arcadePhysics.overlap(troll, player, troll.onOverlap)
             }
         }

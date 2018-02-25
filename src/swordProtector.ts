@@ -1,6 +1,7 @@
 import {PlayerWeapon} from './playerweapon'
 import { Sprite } from 'phaser-ce';
 import { Enemy } from './enemy';
+import { SWORDPROTECTOR_DEFAULT_COOLDOWN, SWORDPROTECTOR_DEFAULT_ATTACKSPEED, SWORDPROTECTOR_DEFAULT_POWER } from './config';
 
 enum swordState {
     READY,
@@ -9,16 +10,21 @@ enum swordState {
 }
 
 export class SwordProtector extends PlayerWeapon {
-    private coolDownFrame = 120
-    private coolDownCount = 0;
-    private attackFrame = 20;
+    protected coolDownInFrame = SWORDPROTECTOR_DEFAULT_COOLDOWN
+    private coolDownCount = this.coolDownInFrame
+    private attackFrame = SWORDPROTECTOR_DEFAULT_ATTACKSPEED;
     private attackFrameCountDown = this.attackFrame;
 
     private state = swordState.REST;
     private damagedEnemy = new Set<Sprite>() ;
 
+    constructor(game: Phaser.Game, x: number, y:number, key:string, frame:number,
+                power=SWORDPROTECTOR_DEFAULT_POWER){
+        super(game, x, y, key, frame, power);
+    }
+
     setCoolDown(cd: number){
-        this.coolDownFrame = cd;
+        this.coolDownInFrame = cd;
     }
 
     setAttackFrame(frame: number){
@@ -49,7 +55,7 @@ export class SwordProtector extends PlayerWeapon {
         default:
             this.alpha = 0.5;
             this.coolDownCount++;
-            if(this.coolDownCount >= this.coolDownFrame){
+            if(this.coolDownCount >= this.coolDownInFrame){
                 this.state = swordState.READY;
                 this.coolDownCount = 0;
             }
