@@ -53,7 +53,7 @@ export class PlayerWeapon extends Sprite {
         return this.power;
     }
 
-    weaponUpdate(enemies: Enemy[]){
+    weaponUpdate(enemies: Set<Enemy>){
     }
 
     onOverlap(weapon:PlayerWeapon, enemy: Sprite){

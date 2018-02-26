@@ -31,7 +31,7 @@ window.onload = function() {
     let player: Player;
     let weapons: PlayerWeapon[];
 
-    let trolls: Troll[] = [];
+    let trolls: Set<Troll> = new Set();
 
     function create () {
         weapons = [];
@@ -56,34 +56,47 @@ window.onload = function() {
         let circleTrolls = trollGenerator.getTrollsInCircle(player.x,player.y,5,5,150);
 
         for(let i = 0; i < 1; i++){
-            trolls[i] = trollGenerator.getOneTroll(50+i*20, 100, undefined, 20);
+            let t = trollGenerator.getOneTroll(50+i*20, 100, undefined, 20);
+            trolls.add(t);
         }
-        trolls = trolls.concat(circleTrolls);
+
+        for(let t of circleTrolls){
+            trolls = trolls.add(t);
+        }
 
         let pickup = new Pickup(game, 300,300,rpgItemSpriteKey, rpgItem.ShieldGold, 600);
 
         setUpKeys(game.input.keyboard);
-   }
+    }
 
     function update() {
-        player.controllPlayer(upKey, downKey, leftKey, rightKey);
-        for(let w of weapons){
-            w.weaponUpdate(trolls);
-            arcadePhysics.overlap(w, trolls, w.onOverlap);
-        }
-
-        arcadePhysics.collide(trolls, trolls)
-
         for(let troll of trolls){
-            if(troll.exists){
+             if(troll.exists){
                 arcadePhysics.moveToObject(troll, player, troll.getSpeedCurrent());
                 arcadePhysics.overlap(troll, player, troll.onOverlap)
             }
         }
+        clearDeadEnemies();
+
+        player.controllPlayer(upKey, downKey, leftKey, rightKey);
+        for(let w of weapons){
+            w.weaponUpdate(trolls);
+            arcadePhysics.overlap(w, Array.from(trolls), w.onOverlap);
+        }
+
+        arcadePhysics.collide(Array.from(trolls), Array.from(trolls))
+
     }
 
-
     function render() {
+    }
+
+    function clearDeadEnemies(){
+        for(let t of trolls){
+            if(! t.exists){
+                trolls.delete(t);
+            }
+        }
     }
 
     function setUpKeys(keyboard:Keyboard){
@@ -94,6 +107,3 @@ window.onload = function() {
     }
 
 };
-
-
-

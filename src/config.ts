@@ -9,3 +9,10 @@ export const SWORDPROTECTOR_DEFAULT_POWER = 5
 export const BASICGUN_DEFAULT_COOLDOWN = 40
 export const BASICGUN_DEFAULT_POWER = 5
 export const BASICBULLET_DEFAULT_SPEED = 300;
+
+export const ENEMY_DEFAULT_HP = 10;
+export const ENEMY_DEFAULT_POWER = 5;
+export const ENEMY_DEFAULT_SPEED = 50;
+
+export const PLAYER_DEFAULT_HP = 100;
+export const PLAYER_DEFAULT_SPEED = 200;

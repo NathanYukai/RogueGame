@@ -32,7 +32,7 @@ export class SwordProtector extends PlayerWeapon {
         this.attackFrameCountDown = frame;
     }
 
-    weaponUpdate(enemies: Enemy[]){
+    weaponUpdate(enemies: Set<Enemy>){
         this.followRotate();
 
         switch(this.state){
@@ -63,6 +63,7 @@ export class SwordProtector extends PlayerWeapon {
     }
 
     onOverlap(weapon: SwordProtector, enemy: Sprite){
+        console.log()
         if(weapon.state == swordState.READY){
             weapon.state = swordState.ATTACK
         }

@@ -10,6 +10,7 @@ export class BasicGun extends PlayerWeapon{
     private coolDownFrame = BASICGUN_DEFAULT_COOLDOWN
     private coolDownCount = 0;
     private bullets: Set<BasicBullet>;
+    private angleAllow = 30/180 * Math.PI;
 
     constructor(game: Phaser.Game, x: number, y:number, key:string, frame:number,
                 power=BASICGUN_DEFAULT_POWER){
@@ -21,11 +22,27 @@ export class BasicGun extends PlayerWeapon{
         this.coolDownFrame = cd;
     }
 
-    weaponUpdate(enemies: Enemy[]){
+    private getAllEnemeyWithInAngle(enemies: Set<Enemy>): Set<Enemy>{
+        let res = new Set;
+
+        for(let e of enemies){
+            let angleBetween = this.game.physics.arcade.angleBetween(this, e);
+            let withIn = (angleBetween)/2 < this.angleAllow;
+            if(withIn){
+                res.add(e);
+            }
+        }
+
+        return res;
+    }
+
+    weaponUpdate(allEnemies: Set<Enemy>){
+        const enemies = this.getAllEnemeyWithInAngle(allEnemies);
         this.followRotate();
 
-        let closestEnemy = this.game.physics.arcade.closest(this, enemies);
-        this.rotation = this.game.physics.arcade.angleBetween(this, closestEnemy) + this.faceNorthAngle;
+        const closestEnemy = this.game.physics.arcade.closest(this, Array.from(enemies));
+        const angle = closestEnemy? this.game.physics.arcade.angleBetween(this, closestEnemy): 0;
+        this.rotation = angle + this.faceNorthAngle;
 
         this.coolDownCount --;
         if(this.coolDownCount <=0){

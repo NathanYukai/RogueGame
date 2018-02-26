@@ -1,8 +1,9 @@
 import * as Phaser from 'phaser-ce'
 import { Sprite, GameObjectFactory, Key, Game } from 'phaser-ce';
+import { PLAYER_DEFAULT_HP } from './config';
 
 export class Player extends Phaser.Sprite {
-    constructor (game: Phaser.Game, x:number, y:number, key:string, hp: number = 100){
+    constructor (game: Phaser.Game, x:number, y:number, key:string, hp: number = PLAYER_DEFAULT_HP){
         super(game, x, y, key);
         this.anchor.setTo(0.5,0.5);
         this.maxHealth = hp;
@@ -30,8 +31,8 @@ export class Player extends Phaser.Sprite {
         this.body.velocity.x = 0;
         this.body.velocity.y = 0;
 
-        this.body.velocity.x = xMove * 200;
-        this.body.velocity.y = yMove * 200
+        this.body.velocity.x = xMove * PLAYER_DEFAULT_HP;
+        this.body.velocity.y = yMove * PLAYER_DEFAULT_HP
     }
 
 }
