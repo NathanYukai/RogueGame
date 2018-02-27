@@ -1,5 +1,5 @@
 export const WEAPON_DISTANCE = 80;
-export const WEAPON_ROTATION_SPD = 0.02;
+export const WEAPON_ROTATION_SPD = 0.002;
 export const WEAPON_45_CLOCKWISE_ROTATION = 3/4 * Math.PI;
 
 export const SWORDPROTECTOR_DEFAULT_COOLDOWN = 120;
@@ -12,7 +12,7 @@ export const BASICBULLET_DEFAULT_SPEED = 300;
 
 export const ENEMY_DEFAULT_HP = 10;
 export const ENEMY_DEFAULT_POWER = 5;
-export const ENEMY_DEFAULT_SPEED = 50;
+export const ENEMY_DEFAULT_SPEED = 10;
 
 export const PLAYER_DEFAULT_HP = 100;
 export const PLAYER_DEFAULT_SPEED = 200;

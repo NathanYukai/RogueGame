@@ -3,6 +3,7 @@ import { Sprite } from 'phaser-ce';
 import { Player}from './player'
 import { Enemy } from './enemy';
 import { WEAPON_DISTANCE, WEAPON_ROTATION_SPD, WEAPON_45_CLOCKWISE_ROTATION } from './config';
+import { myAngleBetween } from './utils';
 
 export class PlayerWeapon extends Sprite {
 
@@ -27,7 +28,7 @@ export class PlayerWeapon extends Sprite {
 
     setOwner(owner: Sprite){
         this.owner = owner;
-        this.rAngle = Math.atan2(this.y - owner.y, this.x - owner.x)
+        this.rAngle = myAngleBetween(this, owner);
     }
 
     setDistance(distance: number){

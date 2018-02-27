@@ -37,15 +37,16 @@ window.onload = function() {
         weapons = [];
         arcadePhysics = game.physics.arcade;
 
-        game.stage.backgroundColor = '#1a6286';
+        const bgColor = '#1a6286';
+        game.stage.backgroundColor = '#ffffff';
         game.physics.startSystem(Physics.ARCADE);
         trollGenerator = new TrollGenerator(game);
 
         player = new Player(game, game.world.centerX, game.world.centerY, 'human');
 
-        weapons[0] = new SwordProtector(game, player.x, player.y-100, rpgItemSpriteKey, rpgItem.BasicSword,5);
-        weapons[1] = new BasicGun(game, 0,0, rpgItemSpriteKey, rpgItem.Bow,1);
-        weapons[2] = new FreezeGun(game, 0,0, rpgItemSpriteKey, rpgItem.Wand, 1);
+        weapons[0] = new SwordProtector(game, player.x, player.y-100, rpgItemSpriteKey, rpgItem.BasicSword,0);
+        weapons[1] = new BasicGun(game, 0,0, rpgItemSpriteKey, rpgItem.Bow,0);
+//        weapons[2] = new FreezeGun(game, 0,0, rpgItemSpriteKey, rpgItem.Wand, 0);
         spreadWeaponOnRail(weapons, player, WEAPON_DISTANCE, WEAPON_ROTATION_SPD)
 
         for(let w of weapons){

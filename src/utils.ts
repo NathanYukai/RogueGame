@@ -22,4 +22,8 @@ export function spreadWeaponOnRail(
     }
 }
 
+export function myAngleBetween(a: Sprite, b:Sprite):number{
+    return Math.atan2(b.y - a.y, b.x - a.x);
+}
+
 export const rpgItemSpriteKey = 'rpgItems';
