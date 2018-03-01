@@ -8,9 +8,9 @@ import { SwordProtector} from './swordProtector'
 import { spreadWeaponOnRail, rpgItemSpriteKey} from './utils';
 import { rpgItem } from './rpgItemEnum';
 import { BasicGun } from './basicGun';
-import { Pickup } from './Pickup';
+import { Pickup } from './pickup';
 import { FreezeGun } from './freezeGun';
-import { WEAPON_DISTANCE, WEAPON_ROTATION_SPD } from './config';
+import { WEAPON_DISTANCE, WEAPON_ROTATION_SPD, PICKUP_DEFAULT_LIFE } from './config';
 
 window.onload = function() {
 
@@ -44,7 +44,7 @@ window.onload = function() {
 
         player = new Player(game, game.world.centerX, game.world.centerY, 'human');
 
-        weapons[0] = new SwordProtector(game, player.x, player.y-100, rpgItemSpriteKey, rpgItem.BasicSword,0);
+        weapons[0] = new SwordProtector(game, player.x, player.y-100, rpgItemSpriteKey, rpgItem.BasicSword,20);
         weapons[1] = new BasicGun(game, 0,0, rpgItemSpriteKey, rpgItem.Bow,0);
 //        weapons[2] = new FreezeGun(game, 0,0, rpgItemSpriteKey, rpgItem.Wand, 0);
         spreadWeaponOnRail(weapons, player, WEAPON_DISTANCE, WEAPON_ROTATION_SPD)
@@ -65,7 +65,7 @@ window.onload = function() {
             trolls = trolls.add(t);
         }
 
-        let pickup = new Pickup(game, 300,300,rpgItemSpriteKey, rpgItem.ShieldGold, 600);
+        let pickup = new Pickup(game, 300,300,rpgItemSpriteKey, rpgItem.ShieldGold, PICKUP_DEFAULT_LIFE);
 
         setUpKeys(game.input.keyboard);
     }

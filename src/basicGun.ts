@@ -7,10 +7,10 @@ import { rpgItem } from './rpgItemEnum';
 import { BASICGUN_DEFAULT_COOLDOWN, BASICGUN_DEFAULT_POWER, BASICBULLET_DEFAULT_SPEED, WEAPON_45_CLOCKWISE_ROTATION } from './config';
 
 export class BasicGun extends PlayerWeapon{
-    private coolDownFrame = BASICGUN_DEFAULT_COOLDOWN
+    protected coolDownInFrame = BASICGUN_DEFAULT_COOLDOWN
     private coolDownCount = 0;
     private bullets: Set<BasicBullet>;
-    private angleAllow = 30/180 * Math.PI;
+    private angleAllow = 0;
 
     private rangeEndA: Sprite;
     private rangeEndB: Sprite;
@@ -24,7 +24,7 @@ export class BasicGun extends PlayerWeapon{
     }
 
     setCoolDown(cd:number) {
-        this.coolDownFrame = cd;
+        this.coolDownInFrame = cd;
     }
 
     private getAllEnemeyWithInAngle(enemies: Set<Enemy>): Set<Enemy>{
@@ -39,7 +39,6 @@ export class BasicGun extends PlayerWeapon{
                 res.add(e);
             }
         }
-        console.log(res.size)
         return res;
     }
 
@@ -73,17 +72,19 @@ export class BasicGun extends PlayerWeapon{
         this.rotation = closestEnemy? myAngleBetween(this,closestEnemy): this.getPointingOutAngle();
         this.rotation += this.faceNorthAngle;
 
+        this.fireBullet();
+        this.updateBullets();
+        this.game.physics.arcade.overlap(enemies, Array.from(this.bullets.values()), this.onBulletOverlap);
+    }
+
+    private fireBullet(){
         this.coolDownCount --;
         if(this.coolDownCount <=0){
-            this.coolDownCount = this.coolDownFrame;
-
+            this.coolDownCount = this.coolDownInFrame;
             let bb = new BasicBullet(this.game, this.x, this.y, rpgItemSpriteKey, rpgItem.Spear,
                                      this.power, BASICBULLET_DEFAULT_SPEED, this.rotation - this.faceNorthAngle);
             this.bullets.add(bb);
         }
-
-        this.updateBullets();
-        this.game.physics.arcade.overlap(enemies, Array.from(this.bullets.values()), this.onBulletOverlap);
     }
 
     private updateBullets(){
@@ -97,6 +98,18 @@ export class BasicGun extends PlayerWeapon{
     onBulletOverlap(enemy:Enemy, bullet:BasicBullet){
         bullet.kill();
         enemy.damage(bullet.getPower());
+    }
+
+    onPowerUpgrade(amount:number){
+        this.power++;
+    }
+
+    onSpeedUpgrade(amount:number){
+        this.coolDownInFrame = this.coolDownInFrame*0.9;
+    }
+
+    onSpecialUpgrade(amount:number){
+        this.angleAllow += 5/180 * Math.PI;
     }
 
 }

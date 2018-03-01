@@ -60,13 +60,13 @@ export class PlayerWeapon extends Sprite {
     onOverlap(weapon:PlayerWeapon, enemy: Sprite){
     }
 
-    onPowerUpgrade(){
+    onPowerUpgrade(amount:number){
     }
 
-    onSpeedUpgrade(){
+    onSpeedUpgrade(amount:number){
     }
 
-    onSpecialUpgrade(){
+    onSpecialUpgrade(amount:number){
     }
 
 }

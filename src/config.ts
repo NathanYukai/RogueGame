@@ -16,3 +16,7 @@ export const ENEMY_DEFAULT_SPEED = 10;
 
 export const PLAYER_DEFAULT_HP = 100;
 export const PLAYER_DEFAULT_SPEED = 200;
+
+export const PICKUP_DEFAULT_LIFE = 600;
+export const PICKUP_BLINK_START = 100;
+export const PICKUP_BLINK_FREQUENT = 20;

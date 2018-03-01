@@ -72,4 +72,5 @@ export class SwordProtector extends PlayerWeapon {
             weapon.damagedEnemy.add(enemy);
         }
     }
+
 }
