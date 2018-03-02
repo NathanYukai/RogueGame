@@ -4,7 +4,9 @@ import { PlayerWeapon } from "./playerweapon";
 export class PowerPickUp extends Pickup{
 
     onPickUp(pickup: Pickup, weapon: PlayerWeapon){
-        pickup.destroy();
-        weapon.onPowerUpgrade(this.power);
+        if(pickup.canBePicked()){
+            pickup.destroy();
+            weapon.onPowerUpgrade(pickup.getPower());
+        }
     }
 }
