@@ -63,7 +63,6 @@ export class SwordProtector extends PlayerWeapon {
     }
 
     onOverlap(weapon: SwordProtector, enemy: Sprite){
-        console.log()
         if(weapon.state == swordState.READY){
             weapon.state = swordState.ATTACK
         }

@@ -20,3 +20,4 @@ export const PLAYER_DEFAULT_SPEED = 200;
 export const PICKUP_DEFAULT_LIFE = 600;
 export const PICKUP_BLINK_START = 100;
 export const PICKUP_BLINK_FREQUENT = 20;
+export const PICKUP_DROP_ANIME_TIME = 60;

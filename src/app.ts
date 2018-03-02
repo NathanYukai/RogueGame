@@ -46,8 +46,8 @@ window.onload = function() {
 
         weapons = [];
         weapons[0] = new SwordProtector(game, player.x, player.y-100, rpgItemSpriteKey, rpgItem.BasicSword,20);
-        weapons[1] = new BasicGun(game, 0,0, rpgItemSpriteKey, rpgItem.Bow,0);
-        weapons[2] = new FreezeGun(game, 0,0, rpgItemSpriteKey, rpgItem.Wand, 0);
+        weapons[1] = new BasicGun(game, 0,10, rpgItemSpriteKey, rpgItem.Bow,0);
+        weapons[2] = new FreezeGun(game, 10,0, rpgItemSpriteKey, rpgItem.Wand, 0);
         spreadWeaponOnRail(weapons, player, WEAPON_DISTANCE, WEAPON_ROTATION_SPD)
 
         let circleTrolls = trollGenerator.getTrollsInCircle(player.x,player.y,5,5,150);
