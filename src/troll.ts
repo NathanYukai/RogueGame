@@ -6,8 +6,11 @@ import { PowerPickUp } from './powerPickUp';
 import { rpgItemSpriteKey } from './utils';
 import { rpgItem } from './rpgItemEnum';
 import { PICKUP_DEFAULT_LIFE } from './config';
+import { pickupGroup } from './globals';
 
 export class Troll extends Enemy{
+
+    private dropChanceInHundred = 80;
 
     onOverlap(troll:Troll, player: Player){
         troll.destroy();
@@ -16,7 +19,13 @@ export class Troll extends Enemy{
 
     kill(): Sprite{
         super.kill();
-        new PowerPickUp(this.game, this.x, this.y, rpgItemSpriteKey, rpgItem.PotionRed, PICKUP_DEFAULT_LIFE)
+        if(Math.random()*100 < this.dropChanceInHundred){
+            const pickup = new PowerPickUp(this.game, this.x, this.y,
+                            rpgItemSpriteKey,
+                            rpgItem.PotionRedBig,
+                            PICKUP_DEFAULT_LIFE)
+            pickupGroup.add(pickup)
+        }
         return this
     }
 

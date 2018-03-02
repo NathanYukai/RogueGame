@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser-ce';
-import { Sprite, Physics, Key, Keyboard, } from 'phaser-ce';
+import { Sprite, Physics, Key, Keyboard, Group, } from 'phaser-ce';
 import {Player} from './player'
 import { TrollGenerator } from './trollGenerator';
 import { Troll } from './troll';
@@ -11,6 +11,7 @@ import { BasicGun } from './basicGun';
 import { Pickup } from './pickup';
 import { FreezeGun } from './freezeGun';
 import { WEAPON_DISTANCE, WEAPON_ROTATION_SPD, PICKUP_DEFAULT_LIFE } from './config';
+import { pickupGroup} from './globals';
 
 window.onload = function() {
 
@@ -34,7 +35,6 @@ window.onload = function() {
     let trolls: Set<Troll> = new Set();
 
     function create () {
-        weapons = [];
         arcadePhysics = game.physics.arcade;
 
         const bgColor = '#1a6286';
@@ -44,15 +44,11 @@ window.onload = function() {
 
         player = new Player(game, game.world.centerX, game.world.centerY, 'human');
 
+        weapons = [];
         weapons[0] = new SwordProtector(game, player.x, player.y-100, rpgItemSpriteKey, rpgItem.BasicSword,20);
         weapons[1] = new BasicGun(game, 0,0, rpgItemSpriteKey, rpgItem.Bow,0);
-//        weapons[2] = new FreezeGun(game, 0,0, rpgItemSpriteKey, rpgItem.Wand, 0);
+        weapons[2] = new FreezeGun(game, 0,0, rpgItemSpriteKey, rpgItem.Wand, 0);
         spreadWeaponOnRail(weapons, player, WEAPON_DISTANCE, WEAPON_ROTATION_SPD)
-
-        for(let w of weapons){
-            w.setOwner(player);
-            arcadePhysics.enable(w);
-        }
 
         let circleTrolls = trollGenerator.getTrollsInCircle(player.x,player.y,5,5,150);
 
@@ -64,8 +60,6 @@ window.onload = function() {
         for(let t of circleTrolls){
             trolls = trolls.add(t);
         }
-
-        let pickup = new Pickup(game, 300,300,rpgItemSpriteKey, rpgItem.ShieldGold, PICKUP_DEFAULT_LIFE);
 
         setUpKeys(game.input.keyboard);
     }
@@ -84,9 +78,11 @@ window.onload = function() {
             w.weaponUpdate(trolls);
             arcadePhysics.overlap(w, Array.from(trolls), w.onOverlap);
         }
-
         arcadePhysics.collide(Array.from(trolls), Array.from(trolls))
 
+        for(let pickUp of pickupGroup){
+            arcadePhysics.overlap(pickUp, weapons, pickUp.onPickUp);
+        }
     }
 
     function render() {

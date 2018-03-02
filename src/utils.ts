@@ -15,6 +15,7 @@ export function spreadWeaponOnRail(
         const thisAngle = i*gapAngle;
         const w = weapons[i];
 
+        w.setOwner(player)
         w.setDistance(radius);
         w.setRotationSpeed(spd);
         w.x = player.x + radius * (Math.cos(thisAngle));

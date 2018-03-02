@@ -8,6 +8,7 @@ export class Pickup extends Sprite{
     constructor(game:Phaser.Game, x:number, y:number, key:string, frame:number, lifeTime:number, power=1){
         super(game, x,y,key, frame);
         game.add.existing(this);
+        game.physics.arcade.enable(this);
         this.lifeTimeFrame = lifeTime;
         this.power = power;
     }
@@ -26,6 +27,7 @@ export class Pickup extends Sprite{
     }
 
     onPickUp(pickup: Pickup, weapon: PlayerWeapon){
+        this.destroy();
     }
 
 }
