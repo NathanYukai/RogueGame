@@ -1,6 +1,7 @@
 import { Sprite } from 'phaser-ce';
 import { PlayerWeapon } from './playerweapon';
 import { PICKUP_BLINK_START, PICKUP_BLINK_FREQUENT, PICKUP_DROP_ANIME_TIME } from './config';
+import { pickupGroup } from './globals';
 
 export class Pickup extends Sprite{
     private lifeTimeFrame: number;
@@ -56,8 +57,14 @@ export class Pickup extends Sprite{
     getPower():number {
         return this.power;
     }
+
     onPickUp(pickup: Pickup, weapon: PlayerWeapon){
         this.destroy();
+    }
+
+    destroy(){
+        pickupGroup.delete(this);
+        super.destroy();
     }
 
 }

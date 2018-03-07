@@ -8,12 +8,12 @@ import { myAngleBetween } from './utils';
 export class PlayerWeapon extends Sprite {
 
     protected owner: Sprite;
-    protected rAngle: number;
     protected distance = WEAPON_DISTANCE;
     protected rotateSpd = WEAPON_ROTATION_SPD;
     protected power: number;
     protected coolDownInFrame: number;
     protected specialLevel: number;
+    private rAngle: number;
 
     protected faceNorthAngle = WEAPON_45_CLOCKWISE_ROTATION;
 
@@ -57,7 +57,7 @@ export class PlayerWeapon extends Sprite {
     weaponUpdate(enemies: Set<Enemy>){
     }
 
-    onOverlap(weapon:PlayerWeapon, enemy: Sprite){
+    onOverlapWithEnemy(weapon:PlayerWeapon, enemy: Sprite){
     }
 
     onPowerUpgrade(amount:number){

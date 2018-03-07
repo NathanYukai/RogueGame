@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser-ce'
 import { Sprite, Physics } from 'phaser-ce';
 import { ENEMY_DEFAULT_POWER, ENEMY_DEFAULT_HP, ENEMY_DEFAULT_SPEED } from './config';
+import { DmgText } from './dmgText';
 
 export class Enemy extends Sprite{
     private power:number;
@@ -30,11 +31,16 @@ export class Enemy extends Sprite{
         return this.power;
     }
 
-    getSlowed(percentage:number, duration:number){
+    becomeSlowed(percentage:number, duration:number){
         this.slowedDuration = duration;
         if(percentage> this.slowedPercentage){
             this.slowedPercentage = percentage;
         }
+    }
+
+    damage(amount:number): Sprite{
+        new DmgText(this.game, this.x, this.y, amount.toString())
+        return super.damage(amount)
     }
 
     update() {

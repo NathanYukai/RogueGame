@@ -64,17 +64,22 @@ export class BasicGun extends PlayerWeapon{
     }
 
     weaponUpdate(allEnemies: Set<Enemy>){
-        const enemies = this.getAllEnemeyWithInAngle(allEnemies);
+        const enemiesInRange = this.getAllEnemeyWithInAngle(allEnemies);
         this.followRotate();
         this.updateRange();
 
+        this.rotateToClosestEnemy(enemiesInRange)
+        this.fireBullet();
+        this.updateBullets();
+        this.game.physics.arcade.overlap(Array.from(allEnemies),
+                                         Array.from(this.bullets),
+                                         this.onBulletOverlap);
+    }
+
+    private rotateToClosestEnemy(enemies: Set<Enemy>){
         const closestEnemy = this.game.physics.arcade.closest(this, Array.from(enemies));
         this.rotation = closestEnemy? myAngleBetween(this,closestEnemy): this.getPointingOutAngle();
         this.rotation += this.faceNorthAngle;
-
-        this.fireBullet();
-        this.updateBullets();
-        this.game.physics.arcade.overlap(enemies, Array.from(this.bullets.values()), this.onBulletOverlap);
     }
 
     private fireBullet(){
@@ -96,8 +101,8 @@ export class BasicGun extends PlayerWeapon{
     }
 
     onBulletOverlap(enemy:Enemy, bullet:BasicBullet){
-        bullet.kill();
         enemy.damage(bullet.getPower());
+        bullet.destroy();
     }
 
     onPowerUpgrade(amount:number){
