@@ -12,7 +12,7 @@ export class PlayerWeapon extends Sprite {
     protected rotateSpd = WEAPON_ROTATION_SPD;
     protected power: number;
     protected coolDownInFrame: number;
-    protected specialLevel: number;
+    protected specialLevel = 0;
     private rAngle: number;
 
     protected faceNorthAngle = WEAPON_45_CLOCKWISE_ROTATION;
@@ -69,4 +69,10 @@ export class PlayerWeapon extends Sprite {
     onSpecialUpgrade(amount:number){
     }
 
+    getWeaponInfo(): string{
+        let info = '';
+        info += "power: " + this.power + '\n'
+        info += "coolDown: " + this.coolDownInFrame + '\n'
+        return info;
+    }
 }

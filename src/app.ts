@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser-ce';
-import { Sprite, Physics, Key, Keyboard, Group, } from 'phaser-ce';
+import { Sprite, Physics, Key, Keyboard, Group, Text, } from 'phaser-ce';
 import {Player} from './player'
 import { TrollGenerator } from './trollGenerator';
 import { Troll } from './troll';
@@ -36,6 +36,8 @@ window.onload = function() {
     let trollWaveGapInFrame = 600;
     let trollWaveCount = 0;
 
+    let weaponInfo: Phaser.Text;
+
     function create () {
         arcadePhysics = game.physics.arcade;
 
@@ -56,12 +58,18 @@ window.onload = function() {
         //     let t = trollGenerator.getOneTroll(50+i*20, 100, undefined, 20);
         //     trolls.add(t);
         // }
-
+        weaponInfo = game.add.text(100,100,"", {font: '16px'})
 
         setUpKeys(game.input.keyboard);
     }
 
     function update() {
+
+        const info = weapons[0].getWeaponInfo()
+            + weapons[1].getWeaponInfo()
+            + weapons[2].getWeaponInfo();
+        weaponInfo.text = info;
+
         trollWaveCount --;
         let circleTrolls: Troll[] = [];
         if(trollWaveCount<0){

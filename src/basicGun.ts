@@ -4,7 +4,7 @@ import { Enemy } from './enemy';
 import { BasicBullet } from './basicBullet';
 import { rpgItemSpriteKey, myAngleBetween } from './utils';
 import { rpgItem } from './rpgItemEnum';
-import { BASICGUN_DEFAULT_COOLDOWN, BASICGUN_DEFAULT_POWER, BASICBULLET_DEFAULT_SPEED, WEAPON_45_CLOCKWISE_ROTATION } from './config';
+import { BASICGUN_DEFAULT_COOLDOWN, BASICGUN_DEFAULT_POWER, BASICBULLET_DEFAULT_SPEED, WEAPON_45_CLOCKWISE_ROTATION, BASICGUN_ANGEL_UPGRADE_IN_DEGREE } from './config';
 
 export class BasicGun extends PlayerWeapon{
     protected coolDownInFrame = BASICGUN_DEFAULT_COOLDOWN
@@ -110,11 +110,18 @@ export class BasicGun extends PlayerWeapon{
     }
 
     onSpeedUpgrade(amount:number){
-        this.coolDownInFrame = this.coolDownInFrame*0.9;
+        this.coolDownInFrame = Math.max(10, this.coolDownInFrame - amount*10);
     }
 
     onSpecialUpgrade(amount:number){
-        this.angleAllow += 5/180 * Math.PI;
+        this.angleAllow += BASICGUN_ANGEL_UPGRADE_IN_DEGREE/180 * Math.PI;
     }
+
+    getWeaponInfo(): string{
+        let info = super.getWeaponInfo();
+        info += "Aim angle: " + this.angleAllow*180/Math.PI + '\n'
+        return info
+    }
+
 
 }

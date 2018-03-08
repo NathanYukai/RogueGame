@@ -1,7 +1,7 @@
 import {PlayerWeapon} from './playerweapon'
 import { Sprite } from 'phaser-ce';
 import { Enemy } from './enemy';
-import { SWORDPROTECTOR_DEFAULT_COOLDOWN, SWORDPROTECTOR_DEFAULT_ATTACKFRAME, SWORDPROTECTOR_DEFAULT_POWER, SWORDPROTECTOR_SPECIAL_ATTACK_TIME } from './config';
+import { SWORDPROTECTOR_DEFAULT_COOLDOWN, SWORDPROTECTOR_DEFAULT_ATTACKFRAME, SWORDPROTECTOR_DEFAULT_POWER, SWORDPROTECTOR_SPECIAL_ATTACK_TIME, SWORDPROTECTOR_SPECIAL_CHARGE_MAX } from './config';
 import { myAngleBetween } from './utils';
 
 enum swordState {
@@ -21,7 +21,7 @@ export class SwordProtector extends PlayerWeapon {
     private state = swordState.REST;
     private damagedEnemy = new Set<Sprite>() ;
     private killCount = 0;
-    private specialKillNumber = 1;
+    private specialKillCharge = SWORDPROTECTOR_SPECIAL_CHARGE_MAX;
     private specialAnimTimeInFrame = SWORDPROTECTOR_SPECIAL_ATTACK_TIME;
     private specialAnimCount = this.specialAnimTimeInFrame
 
@@ -50,12 +50,13 @@ export class SwordProtector extends PlayerWeapon {
         case swordState.ATTACK:
             this.normalAttackAnimation();
             return;
+        case swordState.SPECIAL_READY:
         case swordState.READY:
             this.alpha = 1;
             return;
         case swordState.REST:
         default:
-            if(this.killCount > this.specialKillNumber){
+            if(this.killCount > this.specialKillCharge){
                 this.state = swordState.SPECIAL_READY
                 this.killCount = 0;
             }else{
@@ -83,19 +84,20 @@ export class SwordProtector extends PlayerWeapon {
     }
 
     specialAttackAnimation(){
-        console.log("special")
         const frame = this.specialAnimTimeInFrame - this.specialAnimCount;
         this.alpha = 1;
         this.specialAnimCount --;
-        // if(frame < 1){
-            this.rotation = myAngleBetween(this.owner,this) + this.faceNorthAngle;
-        // }
+        this.rotation = myAngleBetween(this.owner,this) + this.faceNorthAngle;
+        this.scale.x = 3;
+        this.scale.y = 3;
 
         let attackFinished = this.specialAnimCount<= 0;
         if(attackFinished){
             this.damagedEnemy.clear();
             this.state = swordState.REST;
             this.specialAnimCount= this.specialAnimTimeInFrame;
+            this.scale.x = 1;
+            this.scale.y = 1;
         }
         return;
     }
@@ -130,11 +132,18 @@ export class SwordProtector extends PlayerWeapon {
     }
 
     onSpeedUpgrade(amount:number){
-        this.coolDownInFrame *= 0.9
+        this.coolDownInFrame = Math.max(10, this.coolDownInFrame - amount*10);
     }
 
     onSpecialUpgrade(amount:number){
-        this.specialLevel += amount;
+        this.specialKillCharge = Math.max(1, this.specialKillCharge - amount);
+    }
+
+    getWeaponInfo(): string{
+        let info = super.getWeaponInfo();
+        info += "kill charge: " + this.specialKillCharge + '\n'
+        info += "current kill count " + this.killCount + '\n'
+        return info
     }
 
 }
