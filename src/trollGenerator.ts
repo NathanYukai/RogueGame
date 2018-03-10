@@ -6,32 +6,43 @@ export class TrollGenerator{
 
     x= 100;
     y= 100;
-    hp= 10;
-    power= 5;
+    private hp= 10;
+    private power= 5;
+    private dropChance = 10;
 
     constructor(game: Phaser.Game){
         this.game = game;
     }
 
-    setStats(x:number, y:number, hp:number, power:number){
+    setStats(x:number, y:number, hp:number, power:number, dropChance:number){
         this.x = x;
         this.y = y;
         this.hp = hp,
         this.power = power;
+        this.dropChance = dropChance;
     }
 
-    getOneTroll(x = this.x, y = this.y, power = this.power, hp = this.hp): Troll{
-        let troll = new Troll(this.game, x, y, 'troll', hp, power);
+    setHp(hp:number){
+        this.hp = hp;
+    }
+
+    setDropChance(dc: number){
+        this.dropChance = dc;
+    }
+
+    getOneTroll(x:number, y:number): Troll{
+        let troll = new Troll(this.game, x, y, 'troll', this.hp, this.power, this.dropChance);
         return troll
     }
 
-    getTrollsInCircle(x = this.x, y = this.y, power = this.power, num: number, r: number): Troll[]{
+    getTrollsInCircle(num: number, r: number): Troll[]{
         let res = [];
         let angleGap = 2*Math.PI / num;
         for(let i = 0; i< num; i++){
-            let tx = x + r*Math.cos(angleGap * i);
-            let ty = y + r*Math.sin(angleGap * i);
-            res.push(new Troll(this.game, tx, ty, 'troll', this.hp, power))
+            let tx = this.x + r*Math.cos(angleGap * i);
+            let ty = this.y + r*Math.sin(angleGap * i);
+            const troll = new Troll(this.game, tx, ty, 'troll', this.hp, this.power, this.dropChance)
+            res.push(troll)
         }
 
         return res;

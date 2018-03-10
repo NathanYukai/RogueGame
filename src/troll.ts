@@ -13,8 +13,6 @@ import { SpecialPickUp } from './specialPickUp';
 
 export class Troll extends Enemy{
 
-    private dropChanceInHundred = 80;
-
     onOverlap(troll:Troll, player: Player){
         troll.destroy();
         player.damage(troll.getPower());
@@ -22,7 +20,9 @@ export class Troll extends Enemy{
 
     kill(): Sprite{
         super.kill();
-        if(Math.random()*100 < this.dropChanceInHundred){
+        const roll = Math.random()*100
+        const drop = roll < this.dropChanceInHundred;
+        if(drop){
             const determin = Math.random()*100;
             let pickup: Pickup;
             if(determin<TROLL_POWER_DROP_THRESH){

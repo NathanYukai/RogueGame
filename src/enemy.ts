@@ -8,15 +8,18 @@ export class Enemy extends Sprite{
     private slowedDuration: number = 0;
     private slowedPercentage: number = 0;
     private speed: number = ENEMY_DEFAULT_SPEED
+    protected dropChanceInHundred: number;
 
     constructor (game: Phaser.Game, x:number, y:number, key:string,
                  hp = ENEMY_DEFAULT_HP,
-                 power = ENEMY_DEFAULT_POWER){
+                 power = ENEMY_DEFAULT_POWER,
+                 dropChance = 10){
         super(game, x, y, key);
         this.anchor.setTo(0.5,0.5);
         this.power = power;
         this.health = hp;
         this.maxHealth = hp;
+        this.dropChanceInHundred = dropChance;
 
         game.add.existing(this);
         game.physics.arcade.enable(this);

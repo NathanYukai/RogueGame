@@ -28,4 +28,18 @@ export function myAngleBetween(a: Sprite, b:Sprite):number{
     return Math.atan2(b.y - a.y, b.x - a.x);
 }
 
+export const waveNumMap = [[10,5],[20,10],[50,20]]
+export const waveDropMap = [[20,90],[20,60],[30,30]]
+export function waveDataDependsOnKillCount(waveMap:number[][], count:number): number{
+    for(let tup of waveMap){
+        if(count < tup[0]){
+            return tup[1];
+        }
+    }
+    const lastMap = waveMap[waveMap.length-1];
+    return lastMap[1];
+}
+
 export const rpgItemSpriteKey = 'rpgItems';
+
+

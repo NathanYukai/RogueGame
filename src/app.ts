@@ -5,7 +5,7 @@ import { TrollGenerator } from './trollGenerator';
 import { Troll } from './troll';
 import { PlayerWeapon } from './playerweapon';
 import { SwordProtector} from './swordProtector'
-import { spreadWeaponOnRail, rpgItemSpriteKey} from './utils';
+import { spreadWeaponOnRail, rpgItemSpriteKey, waveDataDependsOnKillCount, waveDropMap, waveNumMap} from './utils';
 import { rpgItem } from './rpgItemEnum';
 import { BasicGun } from './basicGun';
 import { Pickup } from './pickup';
@@ -38,15 +38,18 @@ window.onload = function() {
 
     let weaponInfo: Phaser.Text;
 
+    let totalKillCount = 0;
+
     function create () {
         arcadePhysics = game.physics.arcade;
 
         const bgColor = '#1a6286';
         game.stage.backgroundColor = bgColor;
         game.physics.startSystem(Physics.ARCADE);
-        trollGenerator = new TrollGenerator(game);
-
         player = new Player(game, game.world.centerX, game.world.centerY, 'human');
+
+        trollGenerator = new TrollGenerator(game);
+        trollGenerator.setStats(player.x, player.y, 10, 5, 30);
 
         weapons = [];
         weapons[0] = new SwordProtector(game, player.x, player.y-100, rpgItemSpriteKey, rpgItem.BasicSword,10);
@@ -54,10 +57,6 @@ window.onload = function() {
         weapons[2] = new FreezeGun(game, 10,0, rpgItemSpriteKey, rpgItem.Wand, 1);
         spreadWeaponOnRail(weapons, player, WEAPON_DISTANCE, WEAPON_ROTATION_SPD)
 
-        // for(let i = 0; i < 1; i++){
-        //     let t = trollGenerator.getOneTroll(50+i*20, 100, undefined, 20);
-        //     trolls.add(t);
-        // }
         weaponInfo = game.add.text(100,100,"", {font: '16px'})
 
         setUpKeys(game.input.keyboard);
@@ -70,25 +69,7 @@ window.onload = function() {
             + weapons[2].getWeaponInfo();
         weaponInfo.text = info;
 
-        trollWaveCount --;
-        let circleTrolls: Troll[] = [];
-        if(trollWaveCount<0){
-            circleTrolls = trollGenerator.getTrollsInCircle(player.x,player.y,5,5,250);
-            trollWaveCount = trollWaveGapInFrame;
-        }
-
-        for(let t of circleTrolls){
-            trolls = trolls.add(t);
-        }
-
-        for(let troll of trolls){
-             if(troll.exists){
-                arcadePhysics.moveToObject(troll, player, troll.getSpeedCurrent());
-                arcadePhysics.overlap(troll, player, troll.onOverlap)
-            }
-        }
-        clearDeadEnemies();
-
+        enemyWaveControl();
         player.controllPlayer(upKey, downKey, leftKey, rightKey);
         for(let w of weapons){
             w.weaponUpdate(trolls);
@@ -112,7 +93,30 @@ window.onload = function() {
         for(let t of trolls){
             if(! t.exists){
                 trolls.delete(t);
+                totalKillCount ++;
             }
+        }
+    }
+
+    function enemyWaveControl(){
+        trollWaveCount --;
+        let circleTrolls: Troll[] = [];
+        if(trollWaveCount<0){
+            const numberOfEnemy = waveDataDependsOnKillCount(waveNumMap, totalKillCount);
+            const dropChance = waveDataDependsOnKillCount(waveDropMap, totalKillCount);
+            trollGenerator.setDropChance(dropChance);
+            circleTrolls = trollGenerator.getTrollsInCircle(numberOfEnemy,250);
+            trollWaveCount = trollWaveGapInFrame;
+        }
+
+        for(let t of circleTrolls){
+            trolls = trolls.add(t);
+        }
+
+        clearDeadEnemies();
+        for(let troll of trolls){
+            arcadePhysics.moveToObject(troll, player, troll.getSpeedCurrent());
+            arcadePhysics.overlap(troll, player, troll.onOverlap)
         }
     }
 

@@ -86,10 +86,17 @@ export class BasicGun extends PlayerWeapon{
         this.coolDownCount --;
         if(this.coolDownCount <=0){
             this.coolDownCount = this.coolDownInFrame;
-            let bb = new BasicBullet(this.game, this.x, this.y, rpgItemSpriteKey, rpgItem.Spear,
-                                     this.power, BASICBULLET_DEFAULT_SPEED, this.rotation - this.faceNorthAngle);
+            const bb = this.createBullet();
             this.bullets.add(bb);
         }
+    }
+
+    protected createBullet(): BasicBullet{
+        const spd = BASICBULLET_DEFAULT_SPEED;
+        const angle = this.rotation - this.faceNorthAngle;
+        let bb = new BasicBullet(this.game, this.x, this.y, rpgItemSpriteKey, rpgItem.Spear,
+                                 this.power, spd, angle);
+        return bb
     }
 
     private updateBullets(){
