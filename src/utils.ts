@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser-ce';
 import { Sprite } from 'phaser-ce';
 import { PlayerWeapon } from './playerweapon';
+import { ENEMY_DEFAULT_SPEED, ENEMY_DEFAULT_HP } from './config';
 
 export function spreadWeaponOnRail(
     weapons: PlayerWeapon[],
@@ -28,8 +29,14 @@ export function myAngleBetween(a: Sprite, b:Sprite):number{
     return Math.atan2(b.y - a.y, b.x - a.x);
 }
 
-export const waveNumMap = [[10,5],[20,10],[50,20]]
-export const waveDropMap = [[20,90],[20,60],[30,30]]
+const secondWave = 50;
+
+export const waveNumMap = [[10,5],[secondWave,10],[100,20]]
+export const waveDropMap = [[20,90],[secondWave,60],[100,30]]
+const enemySpd = ENEMY_DEFAULT_SPEED;
+const enemyHP = ENEMY_DEFAULT_HP;
+export const waveSpeedMap = [[10, enemySpd],[secondWave, enemySpd*2]]
+export const waveHpMap = [[10,enemyHP],[secondWave, enemyHP*2]]
 export function waveDataDependsOnKillCount(waveMap:number[][], count:number): number{
     for(let tup of waveMap){
         if(count < tup[0]){

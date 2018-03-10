@@ -5,7 +5,7 @@ import { TrollGenerator } from './trollGenerator';
 import { Troll } from './troll';
 import { PlayerWeapon } from './playerweapon';
 import { SwordProtector} from './swordProtector'
-import { spreadWeaponOnRail, rpgItemSpriteKey, waveDataDependsOnKillCount, waveDropMap, waveNumMap} from './utils';
+import { spreadWeaponOnRail, rpgItemSpriteKey, waveDataDependsOnKillCount, waveDropMap, waveNumMap, waveSpeedMap, waveHpMap} from './utils';
 import { rpgItem } from './rpgItemEnum';
 import { BasicGun } from './basicGun';
 import { Pickup } from './pickup';
@@ -33,6 +33,9 @@ window.onload = function() {
     let weapons: PlayerWeapon[];
 
     let trolls: Set<Troll> = new Set();
+    let trolls_regular: Set<Troll> = new Set();
+    let trolls_formation: Set<Troll> = new Set();
+
     let trollWaveGapInFrame = 600;
     let trollWaveCount = 0;
 
@@ -91,10 +94,24 @@ window.onload = function() {
     }
 
     function clearDeadEnemies(){
+        //qq clear all set of trolls
+
         for(let t of trolls){
             if(! t.exists){
                 trolls.delete(t);
                 totalKillCount ++;
+            }
+        }
+
+        for(let t of trolls_regular){
+            if(! t.exists){
+                trolls_regular.delete(t);
+            }
+        }
+
+        for(let t of trolls_formation){
+             if(! t.exists){
+                trolls_regular.delete(t);
             }
         }
     }
@@ -102,21 +119,55 @@ window.onload = function() {
     function enemyWaveControl(){
         trollWaveCount --;
         let circleTrolls: Troll[] = [];
+        let formationTrolls: Troll[] = [];
         if(trollWaveCount<0){
             const numberOfEnemy = waveDataDependsOnKillCount(waveNumMap, totalKillCount);
             const dropChance = waveDataDependsOnKillCount(waveDropMap, totalKillCount);
+            const speed = waveDataDependsOnKillCount(waveSpeedMap, totalKillCount);
+            const hp = waveDataDependsOnKillCount(waveHpMap, totalKillCount);
             trollGenerator.setDropChance(dropChance);
-            circleTrolls = trollGenerator.getTrollsInCircle(numberOfEnemy,250);
+            trollGenerator.setSpeed(speed);
+            trollGenerator.setHp(hp);
+
+            // circleTrolls = trollGenerator.getTrollsInCircle(numberOfEnemy,250);
+            formationTrolls = trollGenerator.getTrollsInFormation(5,5,100,100,30);
+
             trollWaveCount = trollWaveGapInFrame;
         }
 
-        for(let t of circleTrolls){
-            trolls = trolls.add(t);
+        // for(let t of circleTrolls){
+        //     trolls = trolls.add(t);
+        // }
+        for(let t of formationTrolls){
+            trolls.add(t);
+            trolls_formation.add(t);
         }
 
         clearDeadEnemies();
-        for(let troll of trolls){
+        trollsMoveToOneDirection(trolls_formation, 2,-0.5);
+    }
+
+    function trollsMoveTowardsPlayer(trolls_control: Set<Troll>){
+        for(let troll of trolls_control){
             arcadePhysics.moveToObject(troll, player, troll.getSpeedCurrent());
+            arcadePhysics.overlap(troll, player, troll.onOverlap)
+        }
+    }
+
+    function trollsMoveToOneDirection(trolls_control: Set<Troll>, x:number, y:number){
+        if(trolls_control.size == 0){
+            return;
+        }
+        const spd = Array.from(trolls_control)[0].getSpeedCurrent();
+        const angle = Math.atan2(-y, x);
+        const n_x = spd * Math.cos(angle);
+        const n_y = spd * Math.sin(angle);
+        for(let troll of trolls_control){
+            if(! troll.exists){
+                continue;
+            }
+            troll.body.velocity.x = n_x;
+            troll.body.velocity.y = n_y;
             arcadePhysics.overlap(troll, player, troll.onOverlap)
         }
     }
