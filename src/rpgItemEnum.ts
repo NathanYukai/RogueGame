@@ -34,5 +34,9 @@ export enum rpgItem{
     NecklaceBlue,
     NecklaceStart,
     NecklaceTooth,
-    NecklaceSkull
+    NecklaceSkull,
+    ScrollBlue,
+    ScrollRed,
+    ScrollCloth,
+    ScrollStone
 }

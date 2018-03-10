@@ -1,4 +1,4 @@
-export const WEAPON_DISTANCE = 80;
+export const WEAPON_DISTANCE = 40;
 export const WEAPON_ROTATION_SPD = 0.01;
 export const WEAPON_45_CLOCKWISE_ROTATION = 3/4 * Math.PI;
 
@@ -13,9 +13,17 @@ export const BASICGUN_DEFAULT_POWER = 5
 export const BASICBULLET_DEFAULT_SPEED = 300;
 export const BASICGUN_ANGEL_UPGRADE_IN_DEGREE = 5;
 
+export const FREEZEGUN_DEFAULT_COOLDOWN = 30
+export const FREEZEGUN_DEFAULT_PERCENT = 0.2
+export const FREEZEGUN_DEFAULT_DURATION = 60
+export const FREEZEGUN_DEFAULT_RANGE = 30;
+export const FREEZEBULLET_PARTICLE_NUM = 30;
+export const FREEZEBULLET_PARTICLE_LIFE = 120;
+
 export const ENEMY_DEFAULT_HP = 10;
 export const ENEMY_DEFAULT_POWER = 5;
 export const ENEMY_DEFAULT_SPEED = 20;
+export const ENEMY_DEFAULT_DROP_CHANCE = 10;
 
 export const PLAYER_DEFAULT_HP = 100;
 export const PLAYER_DEFAULT_SPEED = 200;

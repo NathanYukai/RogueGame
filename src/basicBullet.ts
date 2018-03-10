@@ -4,7 +4,7 @@ import { Sprite, Point } from 'phaser-ce';
 export class BasicBullet extends Sprite{
 
     private power: number;
-    private spd: number
+    protected spd: number
 
     constructor(game: Phaser.Game, x:number, y:number, key: string, frame:number, power=1, spd=20, dir: number){
         super(game, x, y, key, frame)

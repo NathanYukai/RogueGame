@@ -44,7 +44,8 @@ window.onload = function() {
         arcadePhysics = game.physics.arcade;
 
         const bgColor = '#1a6286';
-        game.stage.backgroundColor = bgColor;
+        const whiteCOlor = '#ffffff';
+        game.stage.backgroundColor = whiteCOlor;
         game.physics.startSystem(Physics.ARCADE);
         player = new Player(game, game.world.centerX, game.world.centerY, 'human');
 
@@ -52,7 +53,7 @@ window.onload = function() {
         trollGenerator.setStats(player.x, player.y, 10, 5, 30);
 
         weapons = [];
-        weapons[0] = new SwordProtector(game, player.x, player.y-100, rpgItemSpriteKey, rpgItem.BasicSword,10);
+        weapons[0] = new SwordProtector(game, player.x, player.y, rpgItemSpriteKey, rpgItem.BasicSword,10);
         weapons[1] = new BasicGun(game, 0,10, rpgItemSpriteKey, rpgItem.Bow,4);
         weapons[2] = new FreezeGun(game, 10,0, rpgItemSpriteKey, rpgItem.Wand, 1);
         spreadWeaponOnRail(weapons, player, WEAPON_DISTANCE, WEAPON_ROTATION_SPD)
