@@ -42,6 +42,11 @@ export class FreezeGun extends BasicGun{
 
     onExplodeOverlap(enemy: Enemy, explode: SlowExplosion){
         enemy.becomeSlowed(explode.getPercent(), explode.getDuration())
+
+        // prevent too much particles being rendered
+        if(explode.explosed){
+            return;
+        }
         const emiter = explode.game.add.emitter(explode.x, explode.y, FREEZEBULLET_PARTICLE_NUM);
         emiter.makeParticles(rpgItemSpriteKey, rpgItem.ScrollCloth, FREEZEBULLET_PARTICLE_NUM);
         emiter.lifespan = FREEZEBULLET_PARTICLE_LIFE;
@@ -50,6 +55,8 @@ export class FreezeGun extends BasicGun{
         emiter.setAlpha(0.5,0.8);
         emiter.setRotation(0,0);
         emiter.start(true, FREEZEBULLET_PARTICLE_LIFE, null, FREEZEBULLET_PARTICLE_NUM, true);
+
+        explode.explosed = true;
     }
 
     onPowerUpgrade(amount:number){

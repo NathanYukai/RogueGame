@@ -6,6 +6,7 @@ export class SlowExplosion extends Sprite{
 
     private percent:number;
     private duration:number;
+    public explosed = false;
     constructor(game: Game, x:number, y:number, key: string, frame: number,
                 percent: number, duration: number, radius:number){
         super(game, x, y, key, frame);

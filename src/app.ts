@@ -79,7 +79,7 @@ window.onload = function() {
             w.weaponUpdate(trolls);
         }
 
-        arcadePhysics.collide(Array.from(trolls), Array.from(trolls))
+        // arcadePhysics.collide(Array.from(trolls), Array.from(trolls))
 
         for(let pickUp of pickupGroup){
             arcadePhysics.overlap(pickUp, weapons, pickUp.onPickUp);
@@ -95,7 +95,6 @@ window.onload = function() {
 
     function clearDeadEnemies(){
         //qq clear all set of trolls
-
         for(let t of trolls){
             if(! t.exists){
                 trolls.delete(t);
@@ -121,30 +120,26 @@ window.onload = function() {
         let circleTrolls: Troll[] = [];
         let formationTrolls: Troll[] = [];
         if(trollWaveCount<0){
+            configTrollGenerator();
             const numberOfEnemy = waveDataDependsOnKillCount(waveNumMap, totalKillCount);
-            const dropChance = waveDataDependsOnKillCount(waveDropMap, totalKillCount);
-            const speed = waveDataDependsOnKillCount(waveSpeedMap, totalKillCount);
-            const hp = waveDataDependsOnKillCount(waveHpMap, totalKillCount);
-            trollGenerator.setDropChance(dropChance);
-            trollGenerator.setSpeed(speed);
-            trollGenerator.setHp(hp);
-
-            // circleTrolls = trollGenerator.getTrollsInCircle(numberOfEnemy,250);
-            formationTrolls = trollGenerator.getTrollsInFormation(5,5,100,100,30);
+            circleTrolls = trollGenerator.getTrollsInCircle(numberOfEnemy,250);
+            formationTrolls = trollGenerator.getTrollsInFormation(5,1,100,100,30);
 
             trollWaveCount = trollWaveGapInFrame;
         }
 
-        // for(let t of circleTrolls){
-        //     trolls = trolls.add(t);
-        // }
+        for(let t of circleTrolls){
+            trolls = trolls.add(t);
+            trolls_regular.add(t);
+        }
         for(let t of formationTrolls){
             trolls.add(t);
             trolls_formation.add(t);
         }
 
         clearDeadEnemies();
-        trollsMoveToOneDirection(trolls_formation, 2,-0.5);
+        trollsMoveToOneDirection(trolls_formation, 0, -1);
+        trollsMoveTowardsPlayer(trolls_regular);
     }
 
     function trollsMoveTowardsPlayer(trolls_control: Set<Troll>){
@@ -171,6 +166,15 @@ window.onload = function() {
             troll.body.velocity.y = n_y;
             arcadePhysics.overlap(troll, player, troll.onOverlap)
         }
+    }
+
+    function configTrollGenerator(){
+        const dropChance = waveDataDependsOnKillCount(waveDropMap, totalKillCount);
+        const speed = waveDataDependsOnKillCount(waveSpeedMap, totalKillCount);
+        const hp = waveDataDependsOnKillCount(waveHpMap, totalKillCount);
+        trollGenerator.setDropChance(dropChance);
+        trollGenerator.setSpeed(speed);
+        trollGenerator.setHp(hp);
     }
 
     function setUpKeys(keyboard:Keyboard){
