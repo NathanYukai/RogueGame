@@ -50,7 +50,6 @@ export class FreezeGun extends BasicGun{
         emiter.setAlpha(0.5,0.8);
         emiter.setRotation(0,0);
         emiter.start(true, FREEZEBULLET_PARTICLE_LIFE, null, FREEZEBULLET_PARTICLE_NUM, true);
-        explode.destroy();
     }
 
     onPowerUpgrade(amount:number){

@@ -158,14 +158,15 @@ window.onload = function() {
         if(trolls_control.size == 0){
             return;
         }
-        const spd = Array.from(trolls_control)[0].getSpeedCurrent();
-        const angle = Math.atan2(-y, x);
-        const n_x = spd * Math.cos(angle);
-        const n_y = spd * Math.sin(angle);
         for(let troll of trolls_control){
             if(! troll.exists){
                 continue;
             }
+            const spd = troll.getSpeedCurrent();
+            const angle = Math.atan2(-y, x);
+            const n_x = spd * Math.cos(angle);
+            const n_y = spd * Math.sin(angle);
+
             troll.body.velocity.x = n_x;
             troll.body.velocity.y = n_y;
             arcadePhysics.overlap(troll, player, troll.onOverlap)
