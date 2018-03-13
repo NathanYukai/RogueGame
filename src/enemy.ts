@@ -37,7 +37,7 @@ export class Enemy extends Sprite{
     }
 
     becomeSlowed(percentage:number, duration:number){
-        this.slowedDuration = duration;
+        this.slowedDuration += duration;
         if(percentage> this.slowedPercentage){
             this.slowedPercentage = percentage;
         }

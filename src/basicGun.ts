@@ -4,7 +4,8 @@ import { Enemy } from './enemy';
 import { BasicBullet } from './basicBullet';
 import { rpgItemSpriteKey, myAngleBetween } from './utils';
 import { rpgItem } from './rpgItemEnum';
-import { BASICGUN_DEFAULT_COOLDOWN, BASICGUN_DEFAULT_POWER, BASICBULLET_DEFAULT_SPEED, WEAPON_45_CLOCKWISE_ROTATION, BASICGUN_ANGEL_UPGRADE_IN_DEGREE } from './config';
+import { BASICGUN_DEFAULT_COOLDOWN, BASICGUN_DEFAULT_POWER, BASICBULLET_DEFAULT_SPEED, WEAPON_45_CLOCKWISE_ROTATION } from './config';
+import { UPGRADE_BASIC_GUN_POWER_AMOUNTS, UPGRADE_BASIC_GUN_SPEED_AMOUNTS, UPGRADE_BASIC_GUN_SPEED_MIN, UPGRADE_BASIC_GUN_SPECIAL_AMOUNTS, upgradeAccordingly } from './upgradeConfig';
 
 export class BasicGun extends PlayerWeapon{
     protected coolDownInFrame = BASICGUN_DEFAULT_COOLDOWN
@@ -112,16 +113,26 @@ export class BasicGun extends PlayerWeapon{
         bullet.destroy();
     }
 
+    private powerUpgradePtr = 0;
     onPowerUpgrade(amount:number){
-        this.power++;
+        const powerUpgradeAmount = upgradeAccordingly(UPGRADE_BASIC_GUN_POWER_AMOUNTS, this.powerUpgradePtr)
+        this.power += powerUpgradeAmount;
+        this.speedUpgradePtr += amount;
     }
 
+    private speedUpgradePtr = 0;
     onSpeedUpgrade(amount:number){
-        this.coolDownInFrame = Math.max(10, this.coolDownInFrame - amount*10);
+        const upgradeAmount = upgradeAccordingly(UPGRADE_BASIC_GUN_SPEED_AMOUNTS, this.speedUpgradePtr)
+        this.coolDownInFrame = Math.max(UPGRADE_BASIC_GUN_SPEED_MIN,
+                                        this.coolDownInFrame - upgradeAmount);
+        this.speedUpgradePtr += amount;
     }
 
+    private specialUpgradePtr = 0;
     onSpecialUpgrade(amount:number){
-        this.angleAllow += BASICGUN_ANGEL_UPGRADE_IN_DEGREE/180 * Math.PI;
+        const upgradeAmount = upgradeAccordingly(UPGRADE_BASIC_GUN_SPECIAL_AMOUNTS, this.specialUpgradePtr)
+        this.angleAllow += upgradeAmount/180 * Math.PI;
+        this.specialUpgradePtr += amount;
     }
 
     getWeaponInfo(): string{

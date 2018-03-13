@@ -1,8 +1,9 @@
 import {PlayerWeapon} from './playerweapon'
 import { Sprite } from 'phaser-ce';
 import { Enemy } from './enemy';
-import { SWORDPROTECTOR_DEFAULT_COOLDOWN, SWORDPROTECTOR_DEFAULT_ATTACKFRAME, SWORDPROTECTOR_DEFAULT_POWER, SWORDPROTECTOR_SPECIAL_ATTACK_TIME, SWORDPROTECTOR_SPECIAL_CHARGE_MAX } from './config';
+import { SWORD_DEFAULT_COOLDOWN, SWORD_DEFAULT_ATTACKFRAME, SWORD_DEFAULT_POWER, SWORD_SPECIAL_ATTACK_TIME, SWORD_SPECIAL_CHARGE_MAX, SWORD_SPECIAL_POWER_MULTIPLY } from './config';
 import { myAngleBetween } from './utils';
+import { UPGRADE_SWORD_SPEED_AMOUNTS, UPGRADE_SWORD_SPEED_MIN, UPGRADE_SWORD_POWER_AMOUNT, UPGRADE_SWORD_SPECIAL_AMOUNT, UPGRADE_SWORD_SPECIAL_MIN, upgradeAccordingly } from './upgradeConfig';
 
 enum swordState {
     SPECIAL_ATTACK,
@@ -13,20 +14,20 @@ enum swordState {
 }
 
 export class SwordProtector extends PlayerWeapon {
-    protected coolDownInFrame = SWORDPROTECTOR_DEFAULT_COOLDOWN
+    protected coolDownInFrame = SWORD_DEFAULT_COOLDOWN
     private coolDownCount = this.coolDownInFrame
-    private attackFrame = SWORDPROTECTOR_DEFAULT_ATTACKFRAME;
+    private attackFrame = SWORD_DEFAULT_ATTACKFRAME;
     private attackFrameCountDown = this.attackFrame;
 
     private state = swordState.REST;
     private damagedEnemy = new Set<Sprite>() ;
     private killCount = 0;
-    private specialKillCharge = SWORDPROTECTOR_SPECIAL_CHARGE_MAX;
-    private specialAnimTimeInFrame = SWORDPROTECTOR_SPECIAL_ATTACK_TIME;
+    private specialKillCharge = SWORD_SPECIAL_CHARGE_MAX;
+    private specialAnimTimeInFrame = SWORD_SPECIAL_ATTACK_TIME;
     private specialAnimCount = this.specialAnimTimeInFrame
 
     constructor(game: Phaser.Game, x: number, y:number, key:string, frame:number,
-                power=SWORDPROTECTOR_DEFAULT_POWER){
+                power=SWORD_DEFAULT_POWER){
         super(game, x, y, key, frame, power);
     }
 
@@ -102,6 +103,7 @@ export class SwordProtector extends PlayerWeapon {
         return;
     }
 
+    // special attack doesn't charge the sword
     onOverlapWithEnemy(weapon: SwordProtector, enemy: Sprite){
         switch(weapon.state){
         case swordState.READY:
@@ -115,7 +117,7 @@ export class SwordProtector extends PlayerWeapon {
             return;
         }
         if( weapon.state == swordState.SPECIAL_ATTACK ){
-            enemy.damage(weapon.power);
+            enemy.damage(weapon.power * SWORD_SPECIAL_POWER_MULTIPLY);
             weapon.damagedEnemy.add(enemy);
         }
         if( weapon.state == swordState.ATTACK){
@@ -128,15 +130,20 @@ export class SwordProtector extends PlayerWeapon {
     }
 
     onPowerUpgrade(amount:number){
-        this.power += amount;
+        this.power += amount * UPGRADE_SWORD_POWER_AMOUNT;
     }
 
+    private speedUpgradePtr = 0;
     onSpeedUpgrade(amount:number){
-        this.coolDownInFrame = Math.max(10, this.coolDownInFrame - amount*10);
+        const upgradeAmount = upgradeAccordingly(UPGRADE_SWORD_SPEED_AMOUNTS, this.speedUpgradePtr);
+        this.coolDownInFrame = Math.max(UPGRADE_SWORD_SPEED_MIN,
+                                        this.coolDownInFrame - upgradeAmount);
+        this.speedUpgradePtr += amount;
     }
 
     onSpecialUpgrade(amount:number){
-        this.specialKillCharge = Math.max(1, this.specialKillCharge - amount);
+        this.specialKillCharge = Math.max(UPGRADE_SWORD_SPECIAL_MIN,
+                                          this.specialKillCharge - UPGRADE_SWORD_SPECIAL_AMOUNT);
     }
 
     getWeaponInfo(): string{

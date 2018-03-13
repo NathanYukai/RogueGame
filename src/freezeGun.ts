@@ -8,6 +8,7 @@ import { Circle, Sprite } from "phaser-ce";
 import { explodeGroup } from "./globals";
 import { SlowExplosion } from "./slowExplosion";
 import { FreezeBullet } from "./freezeBullet";
+import { upgradeAccordingly, UPGRADE_FREEZE_GUN_POWER_AMOUNTS, UPGRADE_FREEZE_GUN_POWER_MAX, UPGRADE_FREEZE_GUN_SPEED_AMOUNTS, UPGRADE_FREEZE_GUN_SPEED_MIN, UPGRADE_FREEZE_GUN_SPECIAL_AMOUNT } from "./upgradeConfig";
 
 export class FreezeGun extends BasicGun{
 
@@ -59,16 +60,24 @@ export class FreezeGun extends BasicGun{
         explode.explosed = true;
     }
 
+    private freeze_powerUpgradePtr = 0;
     onPowerUpgrade(amount:number){
-        this.percent = Math.min(this.percent + 0.05 , 0.95)
+        const upgradeAmount = upgradeAccordingly(UPGRADE_FREEZE_GUN_POWER_AMOUNTS, this.freeze_powerUpgradePtr);
+        this.percent = Math.min(this.percent + upgradeAmount,
+                               UPGRADE_FREEZE_GUN_POWER_MAX)
+        this.freeze_powerUpgradePtr += amount;
     }
 
+    private freeze_speedUpgradePtr = 0;
     onSpeedUpgrade(amount:number){
-        this.coolDownInFrame = Math.max(10, this.coolDownInFrame - amount*5);
+        const upgradeAmount = upgradeAccordingly(UPGRADE_FREEZE_GUN_SPEED_AMOUNTS, this.freeze_speedUpgradePtr);
+        this.coolDownInFrame = Math.max(UPGRADE_FREEZE_GUN_SPEED_MIN,
+                                        this.coolDownInFrame - upgradeAmount);
+        this.freeze_speedUpgradePtr += amount;
     }
 
     onSpecialUpgrade(amount:number){
-        this.explodeRange += 5;
+        this.explodeRange += amount*UPGRADE_FREEZE_GUN_SPECIAL_AMOUNT;
     }
 
     getWeaponInfo(): string{
