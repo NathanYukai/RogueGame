@@ -29,15 +29,15 @@ export function myAngleBetween(a: Sprite, b:Sprite):number{
     return Math.atan2(b.y - a.y, b.x - a.x);
 }
 
-const secondWave = 70;
+const secondWave = 60;
 
 const enemySpd = ENEMY_DEFAULT_SPEED;
 const enemyHP = ENEMY_DEFAULT_HP;
 
 export const waveNumMap = [[10,5],[secondWave,10],[100,20]]
-export const waveDropMap = [[10,90],[secondWave,70],[100,30]]
-export const waveSpeedMap = [[10, enemySpd],[secondWave, enemySpd*1.5]]
-export const waveHpMap = [[10,enemyHP],[secondWave, enemyHP*1.5]]
+export const waveDropMap = [[10,90],[secondWave,50],[100,30]]
+export const waveSpeedMap = [[10, enemySpd],[secondWave, enemySpd*1.5],[80, enemyHP*3]]
+export const waveHpMap = [[10,enemyHP],[secondWave, enemyHP*1.5],[80, enemyHP*3]]
 
 export function waveDataDependsOnKillCount(waveMap:number[][], count:number): number{
     for(let tup of waveMap){

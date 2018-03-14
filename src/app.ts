@@ -41,7 +41,7 @@ window.onload = function() {
 
         const bgColor = '#1a6286';
         const whiteCOlor = '#ffffff';
-        game.stage.backgroundColor = whiteCOlor;
+        game.stage.backgroundColor = bgColor;
         game.physics.startSystem(Physics.ARCADE);
         player = new Player(game, game.world.centerX, game.world.centerY, 'human');
 
