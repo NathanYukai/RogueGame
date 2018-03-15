@@ -11,10 +11,12 @@ export class BasicGun extends PlayerWeapon{
     protected coolDownInFrame = BASICGUN_DEFAULT_COOLDOWN
     private coolDownCount = 0;
     private bullets: Set<BasicBullet>;
-    private angleAllow = 0;
+    private angleAllow = 30;
 
     private rangeEndA: Sprite;
     private rangeEndB: Sprite;
+
+    private line: Phaser.Graphics;
     constructor(game: Phaser.Game, x: number, y:number, key:string, frame:number,
                 power=BASICGUN_DEFAULT_POWER){
         super(game, x, y, key, frame, power);
@@ -22,7 +24,9 @@ export class BasicGun extends PlayerWeapon{
 
         this.rangeEndA = game.add.sprite(5,5,rpgItemSpriteKey, rpgItem.Spear);
         this.rangeEndB = game.add.sprite(10,10,rpgItemSpriteKey, rpgItem.Spear);
-    }
+        this.line = this.game.add.graphics(0,0);
+ 
+   }
 
     setCoolDown(cd:number) {
         this.coolDownInFrame = cd;
@@ -62,6 +66,13 @@ export class BasicGun extends PlayerWeapon{
         this.rangeEndA.y = this.y + 200*Math.sin(upper);
         this.rangeEndB.x = this.x + 200*Math.cos(lower);
         this.rangeEndB.y = this.y + 200*Math.sin(lower);
+
+        this.line.kill();
+        this.line = this.game.add.graphics(0,0);
+        this.line.lineStyle(20,0xFF0000,1);
+        this.line.moveTo(this.x, this.y);
+        this.line.lineTo(this.rangeEndA.x, this.rangeEndA.y);
+        this.line.endFill();
     }
 
     weaponUpdate(allEnemies: Set<Enemy>){
