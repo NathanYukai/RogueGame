@@ -11,21 +11,17 @@ export class BasicGun extends PlayerWeapon{
     protected coolDownInFrame = BASICGUN_DEFAULT_COOLDOWN
     private coolDownCount = 0;
     private bullets: Set<BasicBullet>;
-    private angleAllow = 30;
+    private angleAllow = 0;
 
-    private rangeEndA: Sprite;
-    private rangeEndB: Sprite;
-
-    private line: Phaser.Graphics;
+    private lineLeft: Phaser.Graphics;
+    private lineRight: Phaser.Graphics;
     constructor(game: Phaser.Game, x: number, y:number, key:string, frame:number,
                 power=BASICGUN_DEFAULT_POWER){
         super(game, x, y, key, frame, power);
         this.bullets = new Set();
 
-        this.rangeEndA = game.add.sprite(5,5,rpgItemSpriteKey, rpgItem.Spear);
-        this.rangeEndB = game.add.sprite(10,10,rpgItemSpriteKey, rpgItem.Spear);
-        this.line = this.game.add.graphics(0,0);
- 
+        this.lineLeft = this.game.add.graphics(0,0);
+        this.lineRight = this.game.add.graphics(0,0);
    }
 
     setCoolDown(cd:number) {
@@ -59,20 +55,29 @@ export class BasicGun extends PlayerWeapon{
         return myAngleBetween(this.owner, this)
     }
 
-    private updateRange(){
+    protected updateRange(){
         const upper = this.getUpperAngle();
         const lower = this.getLowerAngle();
-        this.rangeEndA.x = this.x + 200*Math.cos(upper);
-        this.rangeEndA.y = this.y + 200*Math.sin(upper);
-        this.rangeEndB.x = this.x + 200*Math.cos(lower);
-        this.rangeEndB.y = this.y + 200*Math.sin(lower);
 
-        this.line.kill();
-        this.line = this.game.add.graphics(0,0);
-        this.line.lineStyle(20,0xFF0000,1);
-        this.line.moveTo(this.x, this.y);
-        this.line.lineTo(this.rangeEndA.x, this.rangeEndA.y);
-        this.line.endFill();
+        const lineLeftX = this.x + 100 * Math.cos(upper);
+        const lineLeftY = this.y + 100 * Math.sin(upper);
+        const lineRightX = this.x + 100 * Math.cos(lower);
+        const lineRightY = this.y + 100 * Math.sin(lower);
+
+
+        this.lineLeft.clear();
+        this.lineLeft.lineStyle(10,0xFF0000,1);
+        this.lineLeft.alpha = 0.1;
+        this.lineLeft.moveTo(this.x, this.y);
+        this.lineLeft.lineTo(lineLeftX, lineLeftY);
+        this.lineLeft.endFill();
+
+        this.lineRight.clear();
+        this.lineRight.lineStyle(10,0xFF0000,1);
+        this.lineRight.alpha = 0.1;
+        this.lineRight.moveTo(this.x, this.y);
+        this.lineRight.lineTo(lineRightX, lineRightY);
+        this.lineRight.endFill();
     }
 
     weaponUpdate(allEnemies: Set<Enemy>){

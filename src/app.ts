@@ -33,15 +33,33 @@ window.onload = function() {
     let player: Player;
     let weapons: PlayerWeapon[];
     let weaponInfo: Phaser.Text;
-
     let enemyController: EnemyController;
+
+    let gameStarted: boolean;
 
     function create () {
         arcadePhysics = game.physics.arcade;
+        gameStarted = false;
 
         const bgColor = '#1a6286';
         const whiteCOlor = '#ffffff';
         game.stage.backgroundColor = whiteCOlor;
+        const startButton = game.add.button(200,200, rpgItemSpriteKey, buttonStartGame,undefined,
+                                            rpgItem.ScrollBlue);
+    }
+
+    function buttonStartGame(){
+        gameStarted = true;
+        gameStartCreate();
+    }
+
+    function update () {
+        if(gameStarted){
+            gameStartUpdate();
+        }
+    }
+
+    function gameStartCreate(){
         game.physics.startSystem(Physics.ARCADE);
         player = new Player(game, game.world.centerX, game.world.centerY, 'human');
 
@@ -60,8 +78,9 @@ window.onload = function() {
         setUpKeys(game.input.keyboard);
     }
 
-    function update() {
+    function gameStartUpdate() {
         enemyController.update();
+        player.update();
 
         const info = weapons[0].getWeaponInfo()
             + weapons[1].getWeaponInfo()

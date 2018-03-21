@@ -6,6 +6,7 @@ import { pickupGroup } from './globals';
 export class Pickup extends Sprite{
     private lifeTimeFrame: number;
     private dropAnimTimeFrame = PICKUP_DROP_ANIME_TIME;
+    private canBePickCountDown = PICKUP_DROP_ANIME_TIME * 1.5;
     private origin_y:number;
     protected power:number;
 
@@ -19,7 +20,7 @@ export class Pickup extends Sprite{
     }
 
     canBePicked():boolean{
-        return this.dropAnimTimeFrame < 0;
+        return this.canBePickCountDown< 0;
     }
 
     dropLeftAnimation(){
@@ -41,6 +42,7 @@ export class Pickup extends Sprite{
     update(){
         this.lifeTimeFrame --;
         this.dropAnimTimeFrame --;
+        this.canBePickCountDown --;
 
         this.dropLeftAnimation();
         if(this.lifeTimeFrame < PICKUP_BLINK_START){

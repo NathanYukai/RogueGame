@@ -24,6 +24,9 @@ export class FreezeGun extends BasicGun{
                                         this.onExplodeOverlap)
     }
 
+    protected updateRange(){
+    }
+
     createBullet(): BasicBullet{
         const spd = BASICBULLET_DEFAULT_SPEED;
         const angle = this.rotation - this.faceNorthAngle;
