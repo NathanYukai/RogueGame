@@ -157,5 +157,10 @@ export class BasicGun extends PlayerWeapon{
         return info
     }
 
+    destroy(){
+        this.lineLeft.destroy();
+        this.lineRight.destroy();
+        super.destroy();
+    }
 
 }

@@ -124,4 +124,13 @@ export default class EnemyController{
     getAllTrolls(){
         return this.trolls;
     }
+
+    clearAllEnemy(){
+        for(let t of this.trolls){
+            t.destroy();
+        }
+        this.trolls.clear();
+        this.trolls_regular.clear();
+        this.trolls_formation.clear();
+    }
 }

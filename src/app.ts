@@ -11,7 +11,7 @@ import { BasicGun } from './basicGun';
 import { Pickup } from './pickup';
 import { FreezeGun } from './freezeGun';
 import { WEAPON_DISTANCE, WEAPON_ROTATION_SPD, PICKUP_DEFAULT_LIFE } from './config';
-import { pickupGroup, dmgTextGroup} from './globals';
+import { pickupGroup, dmgTextGroup, clearGlobalGroups} from './globals';
 import EnemyController from './enemyController';
 
 window.onload = function() {
@@ -35,6 +35,8 @@ window.onload = function() {
     let weaponInfo: Phaser.Text;
     let enemyController: EnemyController;
 
+
+    let startButton: Phaser.Button;
     let gameStarted: boolean;
 
     function create () {
@@ -44,11 +46,16 @@ window.onload = function() {
         const bgColor = '#1a6286';
         const whiteCOlor = '#ffffff';
         game.stage.backgroundColor = whiteCOlor;
-        const startButton = game.add.button(200,200, rpgItemSpriteKey, buttonStartGame,undefined,
-                                            rpgItem.ScrollBlue);
+        startButton = game.add.button(200,200, rpgItemSpriteKey, buttonStartGame,undefined,
+                                            rpgItem.ScrollBlue,rpgItem.ScrollRed);
+
+        game.physics.startSystem(Physics.ARCADE);
+        setUpKeys(game.input.keyboard);
+        weapons = [];
     }
 
     function buttonStartGame(){
+        startButton.kill();
         gameStarted = true;
         gameStartCreate();
     }
@@ -60,25 +67,36 @@ window.onload = function() {
     }
 
     function gameStartCreate(){
-        game.physics.startSystem(Physics.ARCADE);
         player = new Player(game, game.world.centerX, game.world.centerY, 'human');
-
         trollGenerator = new TrollGenerator(game);
-        trollGenerator.setStats(player.x, player.y, 10, 5, 30);
-
         enemyController = new EnemyController(game, player, trollGenerator);
 
-        weapons = [];
+        player.alive = true;
+
+        trollGenerator.setStats(player.x, player.y, 10, 5, 30);
+
         weapons[0] = new SwordProtector(game, player.x, player.y, rpgItemSpriteKey, rpgItem.BasicSword,10);
         weapons[1] = new BasicGun(game, 0,10, rpgItemSpriteKey, rpgItem.Bow,4);
         weapons[2] = new FreezeGun(game, 10,0, rpgItemSpriteKey, rpgItem.Wand, 1);
         spreadWeaponOnRail(weapons, player, WEAPON_DISTANCE, WEAPON_ROTATION_SPD)
 
         weaponInfo = game.add.text(100,100,"", {font: '16px'})
-        setUpKeys(game.input.keyboard);
     }
 
     function gameStartUpdate() {
+        if(! player.alive){
+            gameStarted = false;
+            startButton.revive();
+            enemyController.clearAllEnemy();
+            for(const w of weapons){
+                w.destroy();
+            }
+            weapons = []
+
+            clearGlobalGroups();
+            return;
+        }
+
         enemyController.update();
         player.update();
 
