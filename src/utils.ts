@@ -30,14 +30,14 @@ export function myAngleBetween(a: Sprite, b:Sprite):number{
 }
 
 const secondWave = 50;
-const thirdWave = 80;
+const thirdWave = 120;
 
 const enemySpd = ENEMY_DEFAULT_SPEED;
 const enemyHP = ENEMY_DEFAULT_HP;
 
-export const waveNumMap = [[10,5],[secondWave,10],[thirdWave,30]]
+export const waveNumMap = [[10,5],[secondWave,10],[thirdWave,15]]
 export const waveDropMap = [[10,90],[secondWave,50],[thirdWave,10]]
-export const waveSpeedMap = [[10, enemySpd],[secondWave, enemySpd*2],[thirdWave, enemySpd*5]]
+export const waveSpeedMap = [[10, enemySpd],[secondWave, enemySpd*1.5]]
 export const waveHpMap = [[10,enemyHP],[secondWave, enemyHP*1.5],[thirdWave, enemyHP*3]]
 
 export function waveDataDependsOnKillCount(waveMap:number[][], count:number): number{

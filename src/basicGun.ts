@@ -4,14 +4,15 @@ import { Enemy } from './enemy';
 import { BasicBullet } from './basicBullet';
 import { rpgItemSpriteKey, myAngleBetween } from './utils';
 import { rpgItem } from './rpgItemEnum';
-import { BASICGUN_DEFAULT_COOLDOWN, BASICGUN_DEFAULT_POWER, BASICBULLET_DEFAULT_SPEED, WEAPON_45_CLOCKWISE_ROTATION } from './config';
+import { BASICGUN_DEFAULT_COOLDOWN, BASICGUN_DEFAULT_POWER, BASICBULLET_DEFAULT_SPEED, WEAPON_45_CLOCKWISE_ROTATION, BASICGUN_INITIAL_ANGLE } from './config';
 import { UPGRADE_BASIC_GUN_POWER_AMOUNTS, UPGRADE_BASIC_GUN_SPEED_AMOUNTS, UPGRADE_BASIC_GUN_SPEED_MIN, UPGRADE_BASIC_GUN_SPECIAL_AMOUNTS, upgradeAccordingly } from './upgradeConfig';
 
 export class BasicGun extends PlayerWeapon{
+    name = "Bow"
     protected coolDownInFrame = BASICGUN_DEFAULT_COOLDOWN
     private coolDownCount = 0;
     private bullets: Set<BasicBullet>;
-    private angleAllow = 0;
+    private angleAllow = BASICGUN_INITIAL_ANGLE;
 
     private lineLeft: Phaser.Graphics;
     private lineRight: Phaser.Graphics;
@@ -154,6 +155,7 @@ export class BasicGun extends PlayerWeapon{
     getWeaponInfo(): string{
         let info = super.getWeaponInfo();
         info += "Aim angle: " + this.angleAllow*180/Math.PI + '\n'
+        info += "\n\n"
         return info
     }
 

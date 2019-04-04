@@ -14,6 +14,8 @@ enum swordState {
 }
 
 export class SwordProtector extends PlayerWeapon {
+    name = "Sword"
+
     protected coolDownInFrame = SWORD_DEFAULT_COOLDOWN
     private coolDownCount = this.coolDownInFrame
     private attackFrame = SWORD_DEFAULT_ATTACKFRAME;
@@ -150,6 +152,7 @@ export class SwordProtector extends PlayerWeapon {
         let info = super.getWeaponInfo();
         info += "kill charge: " + this.specialKillCharge + '\n'
         info += "current kill count " + this.killCount + '\n'
+        info += "\n\n"
         return info
     }
 

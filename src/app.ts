@@ -80,20 +80,25 @@ window.onload = function() {
         weapons[2] = new FreezeGun(game, 10,0, rpgItemSpriteKey, rpgItem.Wand, 1);
         spreadWeaponOnRail(weapons, player, WEAPON_DISTANCE, WEAPON_ROTATION_SPD)
 
-        weaponInfo = game.add.text(100,100,"", {font: '16px'})
+        weaponInfo = game.add.text(100,50,"", {font: '16px'})
+    }
+
+    function gameOverClear(){
+        gameStarted = false;
+        startButton.revive();
+        enemyController.clearAllEnemy();
+        for(const w of weapons){
+            w.destroy();
+        }
+        weapons = []
+
+        clearGlobalGroups();
+        weaponInfo.destroy();
     }
 
     function gameStartUpdate() {
         if(! player.alive){
-            gameStarted = false;
-            startButton.revive();
-            enemyController.clearAllEnemy();
-            for(const w of weapons){
-                w.destroy();
-            }
-            weapons = []
-
-            clearGlobalGroups();
+            gameOverClear();
             return;
         }
 

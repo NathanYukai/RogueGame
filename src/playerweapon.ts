@@ -71,6 +71,7 @@ export class PlayerWeapon extends Sprite {
 
     getWeaponInfo(): string{
         let info = '';
+        info += "weapon: " + this.name;
         info += "power: " + this.power + '\n'
         info += "coolDown: " + this.coolDownInFrame + '\n'
         return info;

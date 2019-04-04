@@ -11,6 +11,7 @@ import { FreezeBullet } from "./freezeBullet";
 import { upgradeAccordingly, UPGRADE_FREEZE_GUN_POWER_AMOUNTS, UPGRADE_FREEZE_GUN_POWER_MAX, UPGRADE_FREEZE_GUN_SPEED_AMOUNTS, UPGRADE_FREEZE_GUN_SPEED_MIN, UPGRADE_FREEZE_GUN_SPECIAL_AMOUNT } from "./upgradeConfig";
 
 export class FreezeGun extends BasicGun{
+    name = "Slow Wand"
 
     private explodeRange = FREEZEGUN_DEFAULT_RANGE;
     protected coolDownInFrame = FREEZEGUN_DEFAULT_COOLDOWN;
@@ -88,6 +89,7 @@ export class FreezeGun extends BasicGun{
         info += "percentage: " + this.percent + '\n'
         info += 'duration :' + this.duration + '\n'
         info += "Explode range: " + this.explodeRange + '\n'
+        info += "\n\n"
         return info;
     }
 }
