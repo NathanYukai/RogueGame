@@ -4,7 +4,8 @@
   "description": "test game",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "build": "webpack"
   },
   "author": "yukai",
   "license": "ISC",

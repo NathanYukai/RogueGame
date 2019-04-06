@@ -1,10 +1,10 @@
 import * as Phaser from 'phaser-ce'
-import { Player } from './player';
+import { Player } from '../player';
 import { Troll } from './troll';
-import { waveDataDependsOnKillCount, waveDropMap, waveSpeedMap, waveHpMap, waveNumMap } from './utils';
+import { waveDataDependsOnKillCount, waveDropMap, waveSpeedMap, waveHpMap, waveNumMap } from '../utils';
 import { TrollGenerator } from './trollGenerator';
 
-export default class EnemyController{
+export default class EnemyController {
 
     private game: Phaser.Game;
     private player: Player;
@@ -20,39 +20,39 @@ export default class EnemyController{
     private trollFormationWaveCount = 0;
     totalKillCount: number;
 
-    constructor(game: Phaser.Game, player: Player, generator: TrollGenerator){
+    constructor(game: Phaser.Game, player: Player, generator: TrollGenerator) {
         this.game = game;
         this.player = player;
         this.trollGenerator = generator;
         this.totalKillCount = 0;
     }
 
-    update(){
-        this.trollWaveCount --;
-        this.trollFormationWaveCount --;
+    update() {
+        this.trollWaveCount--;
+        this.trollFormationWaveCount--;
         let circleTrolls: Troll[] = [];
         let formationTrolls: Troll[] = [];
-        if(this.trollWaveCount<0){
+        if (this.trollWaveCount < 0) {
             this.configTrollGenerator();
             const numberOfEnemy = waveDataDependsOnKillCount(waveNumMap, this.totalKillCount);
-            circleTrolls = this.trollGenerator.getTrollsInCircle(numberOfEnemy,250);
+            circleTrolls = this.trollGenerator.getTrollsInCircle(numberOfEnemy, 250);
 
             this.trollWaveCount = this.trollWaveGapInFrame;
         }
-        if(this.trollFormationWaveCount<0){
+        if (this.trollFormationWaveCount < 0) {
             this.configTrollGenerator();
             const numberOfEnemy = waveDataDependsOnKillCount(waveNumMap, this.totalKillCount);
-            formationTrolls = this.trollGenerator.getTrollsInFormation(5,1,300,100,30);
+            formationTrolls = this.trollGenerator.getTrollsInFormation(5, 1, 300, 100, 30);
 
-            this.trollFormationWaveCount= this.trollFormationWaveGap;
+            this.trollFormationWaveCount = this.trollFormationWaveGap;
         }
 
 
-        for(let t of circleTrolls){
+        for (let t of circleTrolls) {
             this.trolls.add(t);
             this.trolls_regular.add(t);
         }
-        for(let t of formationTrolls){
+        for (let t of formationTrolls) {
             this.trolls.add(t);
             this.trolls_formation.add(t);
         }
@@ -62,43 +62,43 @@ export default class EnemyController{
         this.trollsMoveTowardsPlayer(this.trolls_regular);
     }
 
-    clearDeadEnemies(){
+    clearDeadEnemies() {
         //qq clear all set of trolls
-        for(let t of this.trolls){
-            if(! t.exists){
+        for (let t of this.trolls) {
+            if (!t.exists) {
                 this.trolls.delete(t);
-                this.totalKillCount ++;
+                this.totalKillCount++;
             }
         }
 
-        for(let t of this.trolls_regular){
-            if(! t.exists){
+        for (let t of this.trolls_regular) {
+            if (!t.exists) {
                 this.trolls_regular.delete(t);
             }
         }
 
-        for(let t of this.trolls_formation){
-             if(! t.exists){
+        for (let t of this.trolls_formation) {
+            if (!t.exists) {
                 this.trolls_regular.delete(t);
             }
         }
     }
 
-    trollsMoveTowardsPlayer(trolls_control: Set<Troll>){
+    trollsMoveTowardsPlayer(trolls_control: Set<Troll>) {
         const arcadePhysics = this.game.physics.arcade;
-        for(let troll of trolls_control){
+        for (let troll of trolls_control) {
             arcadePhysics.moveToObject(troll, this.player, troll.getSpeedCurrent());
             arcadePhysics.overlap(troll, this.player, troll.onOverlap)
         }
     }
 
-    trollsMoveToOneDirection(trolls_control: Set<Troll>, x:number, y:number){
-        if(trolls_control.size == 0){
+    trollsMoveToOneDirection(trolls_control: Set<Troll>, x: number, y: number) {
+        if (trolls_control.size == 0) {
             return;
         }
         const arcadePhysics = this.game.physics.arcade;
-        for(let troll of trolls_control){
-            if(! troll.exists){
+        for (let troll of trolls_control) {
+            if (!troll.exists) {
                 continue;
             }
             const spd = troll.getSpeedCurrent();
@@ -112,7 +112,7 @@ export default class EnemyController{
         }
     }
 
-    configTrollGenerator(){
+    configTrollGenerator() {
         const dropChance = waveDataDependsOnKillCount(waveDropMap, this.totalKillCount);
         const speed = waveDataDependsOnKillCount(waveSpeedMap, this.totalKillCount);
         const hp = waveDataDependsOnKillCount(waveHpMap, this.totalKillCount);
@@ -121,12 +121,12 @@ export default class EnemyController{
         this.trollGenerator.setHp(hp);
     }
 
-    getAllTrolls(){
+    getAllTrolls() {
         return this.trolls;
     }
 
-    clearAllEnemy(){
-        for(let t of this.trolls){
+    clearAllEnemy() {
+        for (let t of this.trolls) {
             t.destroy();
         }
         this.trolls.clear();

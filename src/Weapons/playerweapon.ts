@@ -1,9 +1,8 @@
 import * as Phaser from 'phaser-ce'
 import { Sprite } from 'phaser-ce';
-import { Player}from './player'
-import { Enemy } from './enemy';
-import { WEAPON_DISTANCE, WEAPON_ROTATION_SPD, WEAPON_45_CLOCKWISE_ROTATION } from './config';
-import { myAngleBetween } from './utils';
+import { Enemy } from '../Enemies/enemy';
+import { myAngleBetween } from '../utils';
+import { WEAPON_DISTANCE, WEAPON_ROTATION_SPD, WEAPON_45_CLOCKWISE_ROTATION } from '../Configs/config';
 
 export class PlayerWeapon extends Sprite {
 
@@ -17,59 +16,59 @@ export class PlayerWeapon extends Sprite {
 
     protected faceNorthAngle = WEAPON_45_CLOCKWISE_ROTATION;
 
-    constructor(game: Phaser.Game, x:number, y:number, key:string, frame: number, power = 5){
+    constructor(game: Phaser.Game, x: number, y: number, key: string, frame: number, power = 5) {
         super(game, x, y, key, frame);
 
-        this.anchor.setTo(0.5,0.5);
+        this.anchor.setTo(0.5, 0.5);
         this.power = power;
         game.add.existing(this);
         game.physics.arcade.enable(this);
     }
 
-    setOwner(owner: Sprite){
+    setOwner(owner: Sprite) {
         this.owner = owner;
         this.rAngle = myAngleBetween(this, owner);
     }
 
-    setDistance(distance: number){
+    setDistance(distance: number) {
         this.distance = distance;
     }
 
-    setRotationSpeed(spd: number){
+    setRotationSpeed(spd: number) {
         this.rotateSpd = spd;
     }
 
-    followRotate(){
-        let angle = this.rAngle+ this.rotateSpd;
+    followRotate() {
+        let angle = this.rAngle + this.rotateSpd;
         this.setPosition(angle);
         this.rAngle = angle
     }
 
-    private setPosition(angle: number){
-        this.x = this.owner.x + this.distance*(Math.cos(angle))
-        this.y = this.owner.y + this.distance*(Math.sin(angle))
+    private setPosition(angle: number) {
+        this.x = this.owner.x + this.distance * (Math.cos(angle))
+        this.y = this.owner.y + this.distance * (Math.sin(angle))
     }
 
-    getPower():number{
+    getPower(): number {
         return this.power;
     }
 
-    weaponUpdate(enemies: Set<Enemy>){
+    weaponUpdate(enemies: Set<Enemy>) {
     }
 
-    onOverlapWithEnemy(weapon:PlayerWeapon, enemy: Sprite){
+    onOverlapWithEnemy(weapon: PlayerWeapon, enemy: Sprite) {
     }
 
-    onPowerUpgrade(amount:number){
+    onPowerUpgrade(amount: number) {
     }
 
-    onSpeedUpgrade(amount:number){
+    onSpeedUpgrade(amount: number) {
     }
 
-    onSpecialUpgrade(amount:number){
+    onSpecialUpgrade(amount: number) {
     }
 
-    getWeaponInfo(): string{
+    getWeaponInfo(): string {
         let info = '';
         info += "weapon: " + this.name;
         info += "power: " + this.power + '\n'

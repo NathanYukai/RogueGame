@@ -9,14 +9,14 @@ pickupGroup = new Set();
 dmgTextGroup = new Set();
 explodeGroup = new Set();
 
-export function clearGlobalGroups(){
-    for(const p of pickupGroup){
+export function clearGlobalGroups() {
+    for (const p of pickupGroup) {
         p.destroy();
     }
-    for(const t of dmgTextGroup){
+    for (const t of dmgTextGroup) {
         t.destroy();
     }
-    for(const e of explodeGroup){
+    for (const e of explodeGroup) {
         e.destroy();
     }
 

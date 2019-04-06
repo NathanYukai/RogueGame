@@ -1,9 +1,9 @@
-import {PlayerWeapon} from './playerweapon'
 import { Sprite } from 'phaser-ce';
-import { Enemy } from './enemy';
-import { SWORD_DEFAULT_COOLDOWN, SWORD_DEFAULT_ATTACKFRAME, SWORD_DEFAULT_POWER, SWORD_SPECIAL_ATTACK_TIME, SWORD_SPECIAL_CHARGE_MAX, SWORD_SPECIAL_POWER_MULTIPLY } from './config';
-import { myAngleBetween } from './utils';
-import { UPGRADE_SWORD_SPEED_AMOUNTS, UPGRADE_SWORD_SPEED_MIN, UPGRADE_SWORD_POWER_AMOUNT, UPGRADE_SWORD_SPECIAL_AMOUNT, UPGRADE_SWORD_SPECIAL_MIN, upgradeAccordingly } from './upgradeConfig';
+import { PlayerWeapon } from '../playerweapon';
+import { SWORD_DEFAULT_COOLDOWN, SWORD_DEFAULT_ATTACKFRAME, SWORD_SPECIAL_CHARGE_MAX, SWORD_SPECIAL_ATTACK_TIME, SWORD_DEFAULT_POWER, SWORD_SPECIAL_POWER_MULTIPLY } from '../../Configs/config';
+import { Enemy } from '../../Enemies/enemy';
+import { myAngleBetween } from '../../utils';
+import { UPGRADE_SWORD_POWER_AMOUNT, upgradeAccordingly, UPGRADE_SWORD_SPEED_AMOUNTS, UPGRADE_SWORD_SPEED_MIN, UPGRADE_SWORD_SPECIAL_MIN, UPGRADE_SWORD_SPECIAL_AMOUNT } from '../../Configs/upgradeConfig';
 
 enum swordState {
     SPECIAL_ATTACK,

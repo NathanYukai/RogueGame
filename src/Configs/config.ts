@@ -1,6 +1,6 @@
 export const WEAPON_DISTANCE = 40;
 export const WEAPON_ROTATION_SPD = 0.01;
-export const WEAPON_45_CLOCKWISE_ROTATION = 3/4 * Math.PI;
+export const WEAPON_45_CLOCKWISE_ROTATION = 3 / 4 * Math.PI;
 
 export const SWORD_DEFAULT_COOLDOWN = 120;
 export const SWORD_DEFAULT_ATTACKFRAME = 20;

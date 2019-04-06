@@ -1,19 +1,18 @@
-import * as Phaser from 'phaser-ce';
 import { Sprite } from 'phaser-ce';
-import { PlayerWeapon } from './playerweapon';
-import { ENEMY_DEFAULT_SPEED, ENEMY_DEFAULT_HP } from './config';
+import { PlayerWeapon } from './Weapons/playerweapon';
+import { ENEMY_DEFAULT_SPEED, ENEMY_DEFAULT_HP } from './Configs/config';
 
 export function spreadWeaponOnRail(
     weapons: PlayerWeapon[],
     player: Sprite,
-    radius:number,
+    radius: number,
     spd: number,
-){
+) {
     const numOfWeapon = weapons.length;
     const gapAngle = Math.PI * 2 / numOfWeapon;
 
-    for(let i = 0; i < numOfWeapon; i++){
-        const thisAngle = i*gapAngle;
+    for (let i = 0; i < numOfWeapon; i++) {
+        const thisAngle = i * gapAngle;
         const w = weapons[i];
         w.setDistance(radius);
         w.setRotationSpeed(spd);
@@ -25,7 +24,7 @@ export function spreadWeaponOnRail(
     }
 }
 
-export function myAngleBetween(a: Sprite, b:Sprite):number{
+export function myAngleBetween(a: Sprite, b: Sprite): number {
     return Math.atan2(b.y - a.y, b.x - a.x);
 }
 
@@ -35,18 +34,18 @@ const thirdWave = 120;
 const enemySpd = ENEMY_DEFAULT_SPEED;
 const enemyHP = ENEMY_DEFAULT_HP;
 
-export const waveNumMap = [[10,5],[secondWave,10],[thirdWave,15]]
-export const waveDropMap = [[10,90],[secondWave,50],[thirdWave,10]]
-export const waveSpeedMap = [[10, enemySpd],[secondWave, enemySpd*1.5]]
-export const waveHpMap = [[10,enemyHP],[secondWave, enemyHP*1.5],[thirdWave, enemyHP*3]]
+export const waveNumMap = [[10, 5], [secondWave, 10], [thirdWave, 15]]
+export const waveDropMap = [[10, 90], [secondWave, 50], [thirdWave, 10]]
+export const waveSpeedMap = [[10, enemySpd], [secondWave, enemySpd * 1.5]]
+export const waveHpMap = [[10, enemyHP], [secondWave, enemyHP * 1.5], [thirdWave, enemyHP * 3]]
 
-export function waveDataDependsOnKillCount(waveMap:number[][], count:number): number{
-    for(let tup of waveMap){
-        if(count < tup[0]){
+export function waveDataDependsOnKillCount(waveMap: number[][], count: number): number {
+    for (let tup of waveMap) {
+        if (count < tup[0]) {
             return tup[1];
         }
     }
-    const lastMap = waveMap[waveMap.length-1];
+    const lastMap = waveMap[waveMap.length - 1];
     return lastMap[1];
 }
 
