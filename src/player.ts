@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser-ce'
-import { PLAYER_DEFAULT_HP, PLAYER_HP_BAR_MAX_LENGTH } from './Configs/config';
+import { PLAYER_DEFAULT_HP, PLAYER_HP_BAR_MAX_LENGTH, PLAYER_DEFAULT_SPEED } from './Configs/config';
 
 export class Player extends Phaser.Sprite {
 
@@ -51,8 +51,8 @@ export class Player extends Phaser.Sprite {
         this.body.velocity.x = 0;
         this.body.velocity.y = 0;
 
-        this.body.velocity.x = xMove * PLAYER_DEFAULT_HP;
-        this.body.velocity.y = yMove * PLAYER_DEFAULT_HP
+        this.body.velocity.x = xMove * PLAYER_DEFAULT_SPEED;
+        this.body.velocity.y = yMove * PLAYER_DEFAULT_SPEED
     }
 
 }

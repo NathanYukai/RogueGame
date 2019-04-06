@@ -11,6 +11,7 @@ import { FreezeGun } from './Weapons/FreezeGun/freezeGun';
 import { pickupGroup, dmgTextGroup, clearGlobalGroups } from './globals';
 import EnemyController from './Enemies/enemyController';
 import { WEAPON_DISTANCE, WEAPON_ROTATION_SPD } from './Configs/config';
+import _ = require('underscore');
 
 window.onload = function () {
 
@@ -102,37 +103,41 @@ window.onload = function () {
 
         enemyController.update();
         player.update();
+        _.map(Array.from(dmgTextGroup), t => t.update());
 
+        debugWeaponInfo();
+
+        player.controllPlayer(upKey, downKey, leftKey, rightKey);
+
+        checkCollisions()
+    }
+
+    function checkCollisions() {
+        const allEnemies = enemyController.getAllEnemies();
+        _.map(weapons, w => w.weaponUpdate(allEnemies));
+
+        arcadePhysics.collide(Array.from(allEnemies), Array.from(allEnemies))
+        for (let pickUp of pickupGroup) {
+            arcadePhysics.overlap(pickUp, weapons, pickUp.onPickUp);
+        }
+    }
+
+    function debugWeaponInfo() {
         const info = weapons[0].getWeaponInfo()
             + weapons[1].getWeaponInfo()
             + weapons[2].getWeaponInfo()
             + 'total kill:' + enemyController.totalKillCount + '\n'
         weaponInfo.text = info;
-
-        player.controllPlayer(upKey, downKey, leftKey, rightKey);
-        for (let w of weapons) {
-            w.weaponUpdate(enemyController.getAllTrolls());
-        }
-
-        const trolls = enemyController.getAllTrolls();
-        arcadePhysics.collide(Array.from(trolls), Array.from(trolls))
-        for (let pickUp of pickupGroup) {
-            arcadePhysics.overlap(pickUp, weapons, pickUp.onPickUp);
-        }
-
-        for (let dmgText of dmgTextGroup) {
-            dmgText.update();
-        }
     }
 
     function render() {
     }
 
     function setUpKeys(keyboard: Keyboard) {
-        upKey = keyboard.addKey(Phaser.Keyboard.UP);
-        downKey = keyboard.addKey(Phaser.Keyboard.DOWN);
-        leftKey = keyboard.addKey(Phaser.Keyboard.LEFT);
-        rightKey = keyboard.addKey(Phaser.Keyboard.RIGHT);
+        upKey = keyboard.addKey(Phaser.Keyboard.W);
+        downKey = keyboard.addKey(Phaser.Keyboard.S);
+        leftKey = keyboard.addKey(Phaser.Keyboard.A);
+        rightKey = keyboard.addKey(Phaser.Keyboard.D);
     }
 
 };

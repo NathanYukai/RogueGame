@@ -121,7 +121,7 @@ export default class EnemyController {
         this.trollGenerator.setHp(hp);
     }
 
-    getAllTrolls() {
+    getAllEnemies() {
         return this.trolls;
     }
 
