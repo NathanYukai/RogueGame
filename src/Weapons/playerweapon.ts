@@ -3,17 +3,21 @@ import { Sprite } from 'phaser-ce';
 import { Enemy } from '../Enemies/enemy';
 import { myAngleBetween } from '../utils';
 import { WEAPON_DISTANCE, WEAPON_ROTATION_SPD, WEAPON_45_CLOCKWISE_ROTATION } from '../Configs/config';
+import { IWeaponOwner } from '../player';
+import { RotationDirection } from './RotationDirection';
 
 export class PlayerWeapon extends Sprite {
 
-    protected owner: Sprite;
+    protected owner: IWeaponOwner;
     protected distance = WEAPON_DISTANCE;
     protected rotateSpd = WEAPON_ROTATION_SPD;
     protected power: number;
     protected coolDownInFrame: number;
     protected specialLevel = 0;
-    private rAngle: number;
+    private radiusAngleToOwner: number;
 
+    // This is because of the sprite sheet I used, that all weapon is facing north east, 
+    // it's logic used by each weapon is a little weird, should fix this later
     protected faceNorthAngle = WEAPON_45_CLOCKWISE_ROTATION;
 
     constructor(game: Phaser.Game, x: number, y: number, key: string, frame: number, power = 5) {
@@ -25,9 +29,9 @@ export class PlayerWeapon extends Sprite {
         game.physics.arcade.enable(this);
     }
 
-    setOwner(owner: Sprite) {
+    setOwner(owner: IWeaponOwner) {
         this.owner = owner;
-        this.rAngle = myAngleBetween(this, owner);
+        this.radiusAngleToOwner = myAngleBetween(this, owner);
     }
 
     setDistance(distance: number) {
@@ -39,9 +43,18 @@ export class PlayerWeapon extends Sprite {
     }
 
     followRotate() {
-        let angle = this.rAngle + this.rotateSpd;
+        let angle = this.radiusAngleToOwner;
+        switch (this.owner.rotationDir) {
+            case RotationDirection.AntiClock:
+                angle = (angle - this.rotateSpd);
+                break;
+            case RotationDirection.ClockWise:
+                angle = (angle + this.rotateSpd);
+                break;
+        }
+        angle = angle % (2 * Math.PI);
         this.setPosition(angle);
-        this.rAngle = angle
+        this.radiusAngleToOwner = angle
     }
 
     private setPosition(angle: number) {

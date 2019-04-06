@@ -28,6 +28,7 @@ window.onload = function () {
     let downKey: Key;
     let leftKey: Key;
     let rightKey: Key;
+    let rotationControlKey: Key;
 
     let player: Player;
     let weapons: PlayerWeapon[];
@@ -49,7 +50,6 @@ window.onload = function () {
             rpgItem.ScrollBlue, rpgItem.ScrollRed);
 
         game.physics.startSystem(Physics.ARCADE);
-        setUpKeys(game.input.keyboard);
         weapons = [];
     }
 
@@ -57,6 +57,8 @@ window.onload = function () {
         startButton.kill();
         gameStarted = true;
         gameStartCreate();
+        setUpKeys(game.input.keyboard, player);
+
     }
 
     function update() {
@@ -107,7 +109,7 @@ window.onload = function () {
 
         debugWeaponInfo();
 
-        player.controllPlayer(upKey, downKey, leftKey, rightKey);
+        player.controllPlayer(upKey, downKey, leftKey, rightKey, rotationControlKey);
 
         checkCollisions()
     }
@@ -133,11 +135,14 @@ window.onload = function () {
     function render() {
     }
 
-    function setUpKeys(keyboard: Keyboard) {
+    function setUpKeys(keyboard: Keyboard, p: Player) {
         upKey = keyboard.addKey(Phaser.Keyboard.W);
         downKey = keyboard.addKey(Phaser.Keyboard.S);
         leftKey = keyboard.addKey(Phaser.Keyboard.A);
         rightKey = keyboard.addKey(Phaser.Keyboard.D);
+        rotationControlKey = keyboard.addKey(Phaser.Keyboard.E);
+
+        rotationControlKey.onDown.add(p.toggleRotationDir.bind(p));
     }
 
 };

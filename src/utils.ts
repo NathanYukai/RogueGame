@@ -1,10 +1,11 @@
 import { Sprite } from 'phaser-ce';
 import { PlayerWeapon } from './Weapons/playerweapon';
 import { ENEMY_DEFAULT_SPEED, ENEMY_DEFAULT_HP } from './Configs/config';
+import { IWeaponOwner } from './player';
 
 export function spreadWeaponOnRail(
     weapons: PlayerWeapon[],
-    player: Sprite,
+    player: IWeaponOwner,
     radius: number,
     spd: number,
 ) {
