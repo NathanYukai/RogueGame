@@ -1,2 +1,2 @@
-build: npm build
+build: npm run build
 run: bash run.sh

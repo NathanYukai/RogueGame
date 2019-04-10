@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser-ce'
 import { PLAYER_DEFAULT_HP, PLAYER_HP_BAR_MAX_LENGTH, PLAYER_DEFAULT_SPEED } from './Configs/config';
-import { RotationDirection } from './Weapons/RotationDirection';
+import { RotationDirection } from './Weapons/rrotationDirection';
 
 export interface IWeaponOwner extends Phaser.Sprite {
     rotationDir: RotationDirection;
