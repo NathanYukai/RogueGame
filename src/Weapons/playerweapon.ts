@@ -4,7 +4,7 @@ import { Enemy } from '../Enemies/enemy';
 import { myAngleBetween } from '../utils';
 import { WEAPON_DISTANCE, WEAPON_ROTATION_SPD, WEAPON_45_CLOCKWISE_ROTATION } from '../Configs/config';
 import { IWeaponOwner } from '../player';
-import { RotationDirection } from './rrotationDirection';
+import { RotationDirection } from './rotationDirection';
 
 export class PlayerWeapon extends Sprite {
 

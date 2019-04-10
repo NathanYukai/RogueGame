@@ -1,4 +1,4 @@
-import { Pickup } from "./ppickup";
+import { Pickup } from "./pickup";
 import { PlayerWeapon } from "./Weapons/playerweapon";
 
 export class SpeedPickUp extends Pickup {

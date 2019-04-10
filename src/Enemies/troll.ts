@@ -5,8 +5,8 @@ import { PowerPickUp } from '../powerPickUp';
 import { rpgItemSpriteKey } from '../utils';
 import { rpgItem } from '../rpgItemEnum';
 import { pickupGroup } from '../globals';
-import { Pickup } from '../ppickup';
-import { SpeedPickUp } from '../sspeedPickUp';
+import { Pickup } from '../pickup';
+import { SpeedPickUp } from '../speedPickUp';
 import { SpecialPickUp } from '../specialPickUp';
 import { TROLL_POWER_DROP_THRESH, PICKUP_DEFAULT_LIFE, TROLL_SPEED_DROP_THRESH } from '../Configs/config';
 

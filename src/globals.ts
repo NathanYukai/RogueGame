@@ -1,4 +1,4 @@
-import { Pickup } from "./ppickup";
+import { Pickup } from "./pickup";
 import { DmgText } from "./dmgText";
 import { Sprite } from "phaser-ce";
 
