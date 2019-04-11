@@ -107,7 +107,7 @@ window.onload = function () {
         player.update();
         _.map(Array.from(dmgTextGroup), t => t.update());
 
-        debugWeaponInfo();
+        //debugWeaponInfo();
 
         player.controllPlayer(upKey, downKey, leftKey, rightKey, rotationControlKey);
 
