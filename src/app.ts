@@ -10,7 +10,7 @@ import { BasicGun } from './Weapons/BaiscGun/basicGun';
 import { FreezeGun } from './Weapons/FreezeGun/freezeGun';
 import { pickupGroup, dmgTextGroup, clearGlobalGroups } from './globals';
 import EnemyController from './Enemies/enemyController';
-import { WEAPON_DISTANCE, WEAPON_ROTATION_SPD } from './Configs/config';
+import { WEAPON_DISTANCE_INACTIVE, WEAPON_ROTATION_SPD } from './Configs/config';
 import _ = require('underscore');
 
 window.onload = function () {
@@ -28,7 +28,7 @@ window.onload = function () {
     let downKey: Key;
     let leftKey: Key;
     let rightKey: Key;
-    let rotationControlKey: Key;
+    let weaponControlKey: Key;
 
     let player: Player;
     let weapons: PlayerWeapon[];
@@ -76,10 +76,13 @@ window.onload = function () {
 
         trollGenerator.setStats(player.x, player.y, 10, 5, 30);
 
-        weapons[0] = new SwordProtector(game, player.x, player.y, rpgItemSpriteKey, rpgItem.BasicSword, 10);
-        weapons[1] = new BasicGun(game, 0, 10, rpgItemSpriteKey, rpgItem.Bow, 4);
-        weapons[2] = new FreezeGun(game, 10, 0, rpgItemSpriteKey, rpgItem.Wand, 1);
-        spreadWeaponOnRail(weapons, player, WEAPON_DISTANCE, WEAPON_ROTATION_SPD)
+        const swordProtector = new SwordProtector(game, player.x, player.y, rpgItemSpriteKey, rpgItem.BasicSword, 10);
+        const bow = new BasicGun(game, 0, 10, rpgItemSpriteKey, rpgItem.Bow, 4);
+        const slowWand = new FreezeGun(game, 10, 0, rpgItemSpriteKey, rpgItem.Wand, 1);
+
+        bow.toggleDirectControl();
+        weapons = [swordProtector, bow, slowWand];
+        spreadWeaponOnRail(weapons, player, WEAPON_DISTANCE_INACTIVE, WEAPON_ROTATION_SPD)
 
         weaponInfo = game.add.text(100, 50, "", { font: '16px' })
     }
@@ -109,7 +112,14 @@ window.onload = function () {
 
         //debugWeaponInfo();
 
-        player.controllPlayer(upKey, downKey, leftKey, rightKey, rotationControlKey);
+        player.controllPlayer(upKey, downKey, leftKey, rightKey);
+
+        if (weaponControlKey.justDown) {
+            const curUnderControl = _.findIndex(_.map(weapons, w => w.isUnderDirectControl()), e => e);
+            weapons[curUnderControl].toggleDirectControl();
+            const next = (curUnderControl + 1) % weapons.length;
+            weapons[next].toggleDirectControl();
+        }
 
         checkCollisions()
     }
@@ -140,9 +150,8 @@ window.onload = function () {
         downKey = keyboard.addKey(Phaser.Keyboard.S);
         leftKey = keyboard.addKey(Phaser.Keyboard.A);
         rightKey = keyboard.addKey(Phaser.Keyboard.D);
-        rotationControlKey = keyboard.addKey(Phaser.Keyboard.E);
+        weaponControlKey = keyboard.addKey(Phaser.Keyboard.TAB);
 
-        rotationControlKey.onDown.add(p.toggleRotationDir.bind(p));
     }
 
 };

@@ -1,4 +1,4 @@
-export const WEAPON_DISTANCE = 40;
+export const WEAPON_DISTANCE_INACTIVE = 20;
 export const WEAPON_ROTATION_SPD = 0.01;
 export const WEAPON_45_CLOCKWISE_ROTATION = 3 / 4 * Math.PI;
 

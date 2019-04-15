@@ -15,7 +15,13 @@ export function spreadWeaponOnRail(
     for (let i = 0; i < numOfWeapon; i++) {
         const thisAngle = i * gapAngle;
         const w = weapons[i];
-        w.setDistance(radius);
+
+        if (w.isUnderDirectControl()) {
+            w.setDistance(radius * 2);
+
+        } else {
+            w.setDistance(radius);
+        }
         w.setRotationSpeed(spd);
         w.x = player.x + radius * (Math.cos(thisAngle));
         w.y = player.y + radius * (Math.sin(thisAngle));
@@ -25,7 +31,7 @@ export function spreadWeaponOnRail(
     }
 }
 
-export function myAngleBetween(a: Sprite, b: Sprite): number {
+export function myAngleBetween(a: { x: number, y: number }, b: { x: number, y: number }): number {
     return Math.atan2(b.y - a.y, b.x - a.x);
 }
 

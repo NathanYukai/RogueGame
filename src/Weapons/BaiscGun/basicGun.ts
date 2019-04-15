@@ -81,8 +81,8 @@ export class BasicGun extends PlayerWeapon {
     }
 
     weaponUpdate(allEnemies: Set<Enemy>) {
+        super.weaponUpdate(allEnemies);
         const enemiesInRange = this.getAllEnemeyWithInAngle(allEnemies);
-        this.followRotate();
         this.updateRange();
 
         this.rotateToClosestEnemy(enemiesInRange)
