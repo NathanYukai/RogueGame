@@ -2,33 +2,38 @@ import { Sprite } from 'phaser-ce';
 import { PlayerWeapon } from './Weapons/playerweapon';
 import { ENEMY_DEFAULT_SPEED, ENEMY_DEFAULT_HP } from './Configs/config';
 import { IWeaponOwner } from './player';
+import _ = require('underscore');
 
 export function spreadWeaponOnRail(
     weapons: PlayerWeapon[],
     player: IWeaponOwner,
-    radius: number,
+    distanceToOwner: number,
     spd: number,
 ) {
-    const numOfWeapon = weapons.length;
-    const gapAngle = Math.PI * 2 / numOfWeapon;
+    const passiveWeapons = _.filter(weapons, w => !w.isUnderDirectControl());
+    const numOfPassiveWeapon = passiveWeapons.length;
+    const gapAngle = Math.PI * 2 / numOfPassiveWeapon;
 
-    for (let i = 0; i < numOfWeapon; i++) {
+    for (let i = 0; i < numOfPassiveWeapon; i++) {
         const thisAngle = i * gapAngle;
-        const w = weapons[i];
-
-        if (w.isUnderDirectControl()) {
-            w.setDistance(radius * 2);
-
-        } else {
-            w.setDistance(radius);
-        }
-        w.setRotationSpeed(spd);
-        w.x = player.x + radius * (Math.cos(thisAngle));
-        w.y = player.y + radius * (Math.sin(thisAngle));
-
-        //this is called last so that the angle is set correctly
-        w.setOwner(player)
+        const w = passiveWeapons[i];
+        setWeaponPosition(w, distanceToOwner, thisAngle, player, spd);
     }
+
+    const activeWeapon = _.find(weapons, w => w.isUnderDirectControl());
+    setWeaponPosition(activeWeapon, distanceToOwner * 2, 0, player, spd);
+}
+
+function setWeaponPosition(w: PlayerWeapon, dist: number, angle: number, owner: IWeaponOwner, rotateSpd: number) {
+    w.setDistance(dist);
+
+    w.x = owner.x + dist * (Math.cos(angle));
+    w.y = owner.y + dist * (Math.sin(angle));
+
+    w.setRotationSpeed(rotateSpd);
+
+    //this is called last so that the angle is set correctly
+    w.setOwner(owner)
 }
 
 export function myAngleBetween(a: { x: number, y: number }, b: { x: number, y: number }): number {

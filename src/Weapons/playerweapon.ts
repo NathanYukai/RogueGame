@@ -39,6 +39,14 @@ export class PlayerWeapon extends Sprite {
         return this.underDirectControl;
     }
 
+    getRadiusAngleToOwner() {
+        return this.radiusAngleToOwner;
+    }
+
+    setRadiusAngleToOwner(angle: number) {
+        this.radiusAngleToOwner = angle;
+    }
+
     setOwner(owner: IWeaponOwner) {
         this.owner = owner;
         this.radiusAngleToOwner = myAngleBetween(this, owner);

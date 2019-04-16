@@ -114,14 +114,29 @@ window.onload = function () {
 
         player.controllPlayer(upKey, downKey, leftKey, rightKey);
 
-        if (weaponControlKey.justDown) {
-            const curUnderControl = _.findIndex(_.map(weapons, w => w.isUnderDirectControl()), e => e);
-            weapons[curUnderControl].toggleDirectControl();
-            const next = (curUnderControl + 1) % weapons.length;
-            weapons[next].toggleDirectControl();
-        }
+        checkSwitchUnderControlWeapons();
 
         checkCollisions()
+    }
+
+
+    function checkSwitchUnderControlWeapons() {
+
+        if (weaponControlKey.justDown) {
+            const curUnderControlIdx = _.findIndex(_.map(weapons, w => w.isUnderDirectControl()), e => e);
+            const curUnderControl = weapons[curUnderControlIdx];
+            curUnderControl.toggleDirectControl();
+            curUnderControl.setDistance(WEAPON_DISTANCE_INACTIVE);
+
+            const nextIdx = (curUnderControlIdx + 1) % weapons.length;
+            const next = weapons[nextIdx];
+            next.toggleDirectControl();
+            next.setDistance(WEAPON_DISTANCE_INACTIVE * 2);
+
+            const curRad = curUnderControl.getRadiusAngleToOwner();
+            curUnderControl.setRadiusAngleToOwner(next.getRadiusAngleToOwner());
+            next.setRadiusAngleToOwner(curRad);
+        }
     }
 
     function checkCollisions() {
