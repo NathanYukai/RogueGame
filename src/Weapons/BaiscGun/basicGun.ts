@@ -1,15 +1,18 @@
-import { PlayerWeapon } from '../playerweapon'
+import { PlayerWeapon, WeaponSkillState } from '../playerweapon'
 import { Enemy } from '../../Enemies/enemy';
 import { BasicBullet } from './basicBullet';
 import { rpgItemSpriteKey, myAngleBetween } from '../../utils';
 import { rpgItem } from '../../rpgItemEnum';
 import { UPGRADE_BASIC_GUN_POWER_AMOUNTS, UPGRADE_BASIC_GUN_SPEED_AMOUNTS, UPGRADE_BASIC_GUN_SPEED_MIN, UPGRADE_BASIC_GUN_SPECIAL_AMOUNTS, upgradeAccordingly } from '../../Configs/upgradeConfig';
-import { BASICGUN_DEFAULT_COOLDOWN, BASICGUN_INITIAL_ANGLE, BASICGUN_DEFAULT_POWER, BASICBULLET_DEFAULT_SPEED } from '../../Configs/config';
+import { BASICGUN_DEFAULT_COOLDOWN, BASICGUN_INITIAL_ANGLE, BASICGUN_DEFAULT_POWER, BASICBULLET_DEFAULT_SPEED, BASICGUN_DEFAULT_ACTIVE_SKILL_COOLDOWN, ENEMY_FORMATATION_LIFE_SPAN } from '../../Configs/config';
 
 export class BasicGun extends PlayerWeapon {
     name = "Bow"
-    protected coolDownInFrame = BASICGUN_DEFAULT_COOLDOWN
-    private coolDownCount = 0;
+    private coolDownWhenActive = BASICGUN_DEFAULT_ACTIVE_SKILL_COOLDOWN;
+    private coolDownNotActive = BASICGUN_DEFAULT_COOLDOWN;
+    protected coolDownInFrame = this.coolDownNotActive;
+
+    private coolDownCountDown = 0;
     private bullets: Set<BasicBullet>;
     private angleAllow = BASICGUN_INITIAL_ANGLE;
 
@@ -100,9 +103,13 @@ export class BasicGun extends PlayerWeapon {
     }
 
     private fireBullet() {
-        this.coolDownCount--;
-        if (this.coolDownCount <= 0) {
-            this.coolDownCount = this.coolDownInFrame;
+        this.coolDownCountDown--;
+        if (this.coolDownCountDown <= 0) {
+            if (this.skillState == WeaponSkillState.ACTIVE) {
+                this.coolDownCountDown = this.coolDownWhenActive;
+            } else if (this.skillState == WeaponSkillState.INACTIVE) {
+                this.coolDownCountDown = this.coolDownNotActive;
+            }
             const bb = this.createBullet();
             this.bullets.add(bb);
         }

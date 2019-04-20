@@ -144,7 +144,7 @@ window.onload = function () {
         if (weaponActiveKey.isDown) {
             const curUnderControlIdx = _.findIndex(_.map(weapons, w => w.isUnderDirectControl()), e => e);
             const curUnderControl = weapons[curUnderControlIdx];
-            curUnderControl.activeSpecial();
+            curUnderControl.activeSkill();
         }
     }
 

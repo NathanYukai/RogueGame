@@ -2,8 +2,13 @@ import * as Phaser from 'phaser-ce'
 import { Sprite } from 'phaser-ce';
 import { Enemy } from '../Enemies/enemy';
 import { myAngleBetween } from '../utils';
-import { WEAPON_DISTANCE_INACTIVE, WEAPON_ROTATION_SPD, WEAPON_45_CLOCKWISE_ROTATION, WEAPON_DEFAULT_MANA_COST, WEAPON_DEFAULT_SKILL_COOLDOWN } from '../Configs/config';
+import { WEAPON_DISTANCE_INACTIVE, WEAPON_ROTATION_SPD, WEAPON_45_CLOCKWISE_ROTATION, WEAPON_DEFAULT_MANA_COST, WEAPON_DEFAULT_SKILL_COOLDOWN, WEAPON_DEFAULT_SKILL_DURATION } from '../Configs/config';
 import { IWeaponOwner } from '../player';
+
+export enum WeaponSkillState {
+    ACTIVE,
+    INACTIVE
+}
 
 export class PlayerWeapon extends Sprite {
 
@@ -13,8 +18,12 @@ export class PlayerWeapon extends Sprite {
     protected coolDownInFrame: number;
     protected specialLevel = 0;
     protected manaCost: number;
-    protected skillCooldown: number;
-    private cdCountDown: number;
+    protected skillCoolDown: number;
+    protected skillcdCountDown: number;
+
+    protected skillState: WeaponSkillState;
+    protected skillDuration: number;
+    protected skillDurationCountDown: number;
 
     // position and such
     protected owner: IWeaponOwner;
@@ -27,7 +36,7 @@ export class PlayerWeapon extends Sprite {
     protected faceNorthAngle = WEAPON_45_CLOCKWISE_ROTATION;
 
     constructor(game: Phaser.Game, x: number, y: number, key: string, frame: number, power = 5,
-        manaCost = WEAPON_DEFAULT_MANA_COST, cd = WEAPON_DEFAULT_SKILL_COOLDOWN) {
+        manaCost = WEAPON_DEFAULT_MANA_COST, cd = WEAPON_DEFAULT_SKILL_COOLDOWN, skillDurationInFrame = WEAPON_DEFAULT_SKILL_DURATION) {
 
         super(game, x, y, key, frame);
 
@@ -35,8 +44,12 @@ export class PlayerWeapon extends Sprite {
         this.anchor.setTo(0.5, 0.5);
         this.power = power;
         this.manaCost = manaCost;
-        this.skillCooldown = cd;
-        this.cdCountDown = cd;
+        this.skillCoolDown = cd;
+        this.skillcdCountDown = this.skillCoolDown;
+
+        this.skillDuration = skillDurationInFrame;
+        this.skillcdCountDown = 0;
+        this.skillState = WeaponSkillState.INACTIVE;
         game.add.existing(this);
         game.physics.arcade.enable(this);
     }
@@ -98,19 +111,27 @@ export class PlayerWeapon extends Sprite {
         return this.power;
     }
 
-    activeSpecial() {
+    activeSkill() {
         if (
-            this.cdCountDown != 0 ||
+            this.skillcdCountDown != 0 ||
             !this.owner.canActiveWeapon(this.manaCost)
         ) {
             return;
         }
-        this.cdCountDown = this.skillCooldown;
+        this.skillcdCountDown = this.skillCoolDown;
+        this.skillDurationCountDown = this.skillDuration;
+        this.skillState = WeaponSkillState.ACTIVE;
         this.owner.onWeaponActive(this.manaCost);
     }
 
     weaponUpdate(enemies: Set<Enemy>) {
-        this.cdCountDown = Math.max(0, this.cdCountDown - 1);
+        this.skillcdCountDown = Math.max(0, this.skillcdCountDown - 1);
+        // this.skillDurationCountDown = Math.max(0, this.skillDurationCountDown - 1);
+        if (this.skillDurationCountDown <= 0) {
+            this.skillState = WeaponSkillState.INACTIVE;
+        } else {
+            this.skillDurationCountDown = Math.max(0, this.skillDurationCountDown - 1);
+        }
         this.followRotate();
     }
 

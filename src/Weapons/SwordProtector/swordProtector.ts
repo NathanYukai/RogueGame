@@ -5,7 +5,7 @@ import { Enemy } from '../../Enemies/enemy';
 import { myAngleBetween } from '../../utils';
 import { UPGRADE_SWORD_POWER_AMOUNT, upgradeAccordingly, UPGRADE_SWORD_SPEED_AMOUNTS, UPGRADE_SWORD_SPEED_MIN, UPGRADE_SWORD_SPECIAL_MIN, UPGRADE_SWORD_SPECIAL_AMOUNT } from '../../Configs/upgradeConfig';
 
-enum swordState {
+enum SwordState {
     SPECIAL_ATTACK,
     SPECIAL_READY,
     READY,
@@ -21,7 +21,7 @@ export class SwordProtector extends PlayerWeapon {
     private attackFrame = SWORD_DEFAULT_ATTACKFRAME;
     private attackFrameCountDown = this.attackFrame;
 
-    private state = swordState.REST;
+    private attackState = SwordState.REST;
     private damagedEnemy = new Set<Sprite>();
     private killCount = 0;
     private specialKillCharge = SWORD_SPECIAL_CHARGE_MAX;
@@ -46,27 +46,27 @@ export class SwordProtector extends PlayerWeapon {
         super.weaponUpdate(enemies);
         this.game.physics.arcade.overlap(this, Array.from(enemies), this.onOverlapWithEnemy);
 
-        switch (this.state) {
-            case swordState.SPECIAL_ATTACK:
+        switch (this.attackState) {
+            case SwordState.SPECIAL_ATTACK:
                 this.specialAttackAnimation();
                 return;
-            case swordState.ATTACK:
+            case SwordState.ATTACK:
                 this.normalAttackAnimation();
                 return;
-            case swordState.SPECIAL_READY:
-            case swordState.READY:
+            case SwordState.SPECIAL_READY:
+            case SwordState.READY:
                 this.alpha = 1;
                 return;
-            case swordState.REST:
+            case SwordState.REST:
             default:
                 if (this.killCount > this.specialKillCharge) {
-                    this.state = swordState.SPECIAL_READY
+                    this.attackState = SwordState.SPECIAL_READY
                     this.killCount = 0;
                 } else {
                     this.alpha = 0.5;
                     this.coolDownCount++;
                     if (this.coolDownCount >= this.coolDownInFrame) {
-                        this.state = swordState.READY;
+                        this.attackState = SwordState.READY;
                         this.coolDownCount = 0;
                     }
                 }
@@ -81,7 +81,7 @@ export class SwordProtector extends PlayerWeapon {
         const attackFinished = this.attackFrameCountDown <= 0;
         if (attackFinished) {
             this.damagedEnemy.clear();
-            this.state = swordState.REST;
+            this.attackState = SwordState.REST;
             this.attackFrameCountDown = this.attackFrame;
         }
     }
@@ -97,7 +97,7 @@ export class SwordProtector extends PlayerWeapon {
         let attackFinished = this.specialAnimCount <= 0;
         if (attackFinished) {
             this.damagedEnemy.clear();
-            this.state = swordState.REST;
+            this.attackState = SwordState.REST;
             this.specialAnimCount = this.specialAnimTimeInFrame;
             this.scale.x = 1;
             this.scale.y = 1;
@@ -108,22 +108,22 @@ export class SwordProtector extends PlayerWeapon {
     // special attack doesn't charge the sword
     onOverlapWithEnemy(weapon: SwordProtector, enemy: Sprite) {
         super.onOverlapWithEnemy(weapon, enemy);
-        switch (weapon.state) {
-            case swordState.READY:
-                weapon.state = swordState.ATTACK;
+        switch (weapon.attackState) {
+            case SwordState.READY:
+                weapon.attackState = SwordState.ATTACK;
                 break;
-            case swordState.SPECIAL_READY:
-                weapon.state = swordState.SPECIAL_ATTACK;
+            case SwordState.SPECIAL_READY:
+                weapon.attackState = SwordState.SPECIAL_ATTACK;
                 break;
         }
         if (weapon.damagedEnemy.has(enemy)) {
             return;
         }
-        if (weapon.state == swordState.SPECIAL_ATTACK) {
+        if (weapon.attackState == SwordState.SPECIAL_ATTACK) {
             enemy.damage(weapon.power * SWORD_SPECIAL_POWER_MULTIPLY);
             weapon.damagedEnemy.add(enemy);
         }
-        if (weapon.state == swordState.ATTACK) {
+        if (weapon.attackState == SwordState.ATTACK) {
             enemy.damage(weapon.power);
             weapon.damagedEnemy.add(enemy);
             if (!enemy.exists) {
