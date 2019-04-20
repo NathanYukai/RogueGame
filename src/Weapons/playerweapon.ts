@@ -2,16 +2,21 @@ import * as Phaser from 'phaser-ce'
 import { Sprite } from 'phaser-ce';
 import { Enemy } from '../Enemies/enemy';
 import { myAngleBetween } from '../utils';
-import { WEAPON_DISTANCE_INACTIVE, WEAPON_ROTATION_SPD, WEAPON_45_CLOCKWISE_ROTATION } from '../Configs/config';
+import { WEAPON_DISTANCE_INACTIVE, WEAPON_ROTATION_SPD, WEAPON_45_CLOCKWISE_ROTATION, WEAPON_DEFAULT_MANA_COST, WEAPON_DEFAULT_SKILL_COOLDOWN } from '../Configs/config';
 import { IWeaponOwner } from '../player';
 
 export class PlayerWeapon extends Sprite {
 
+    //game play
     protected underDirectControl: boolean;
     protected power: number;
     protected coolDownInFrame: number;
     protected specialLevel = 0;
+    protected manaCost: number;
+    protected skillCooldown: number;
+    private cdCountDown: number;
 
+    // position and such
     protected owner: IWeaponOwner;
     protected distance = WEAPON_DISTANCE_INACTIVE;
     protected rotateSpd = WEAPON_ROTATION_SPD;
@@ -21,12 +26,17 @@ export class PlayerWeapon extends Sprite {
     // it's logic used by each weapon is a little weird, should fix this later
     protected faceNorthAngle = WEAPON_45_CLOCKWISE_ROTATION;
 
-    constructor(game: Phaser.Game, x: number, y: number, key: string, frame: number, power = 5) {
+    constructor(game: Phaser.Game, x: number, y: number, key: string, frame: number, power = 5,
+        manaCost = WEAPON_DEFAULT_MANA_COST, cd = WEAPON_DEFAULT_SKILL_COOLDOWN) {
+
         super(game, x, y, key, frame);
 
         this.underDirectControl = false
         this.anchor.setTo(0.5, 0.5);
         this.power = power;
+        this.manaCost = manaCost;
+        this.skillCooldown = cd;
+        this.cdCountDown = cd;
         game.add.existing(this);
         game.physics.arcade.enable(this);
     }
@@ -88,8 +98,24 @@ export class PlayerWeapon extends Sprite {
         return this.power;
     }
 
+    activeSpecial() {
+        if (
+            this.cdCountDown != 0 ||
+            !this.owner.canActiveWeapon(this.manaCost)
+        ) {
+            return;
+        }
+        this.cdCountDown = this.skillCooldown;
+        this.owner.onWeaponActive(this.manaCost);
+    }
+
     weaponUpdate(enemies: Set<Enemy>) {
+        this.cdCountDown = Math.max(0, this.cdCountDown - 1);
         this.followRotate();
+    }
+
+    protected onKillEnemy(weapon: PlayerWeapon, enemy: Sprite) {
+        weapon.owner.onKillEnemy(enemy);
     }
 
     onOverlapWithEnemy(weapon: PlayerWeapon, enemy: Sprite) {

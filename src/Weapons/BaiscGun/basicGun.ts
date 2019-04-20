@@ -66,14 +66,14 @@ export class BasicGun extends PlayerWeapon {
 
 
         this.lineLeft.clear();
-        this.lineLeft.lineStyle(10, 0xFF0000, 1);
+        this.lineLeft.lineStyle(5, 0xFF0000, 1);
         this.lineLeft.alpha = 0.1;
         this.lineLeft.moveTo(this.x, this.y);
         this.lineLeft.lineTo(lineLeftX, lineLeftY);
         this.lineLeft.endFill();
 
         this.lineRight.clear();
-        this.lineRight.lineStyle(10, 0xFF0000, 1);
+        this.lineRight.lineStyle(5, 0xFF0000, 1);
         this.lineRight.alpha = 0.1;
         this.lineRight.moveTo(this.x, this.y);
         this.lineRight.lineTo(lineRightX, lineRightY);
@@ -90,7 +90,7 @@ export class BasicGun extends PlayerWeapon {
         this.updateBullets();
         this.game.physics.arcade.overlap(Array.from(allEnemies),
             Array.from(this.bullets),
-            this.onBulletOverlap);
+            this.onBulletOverlap.bind(this));
     }
 
     private rotateToClosestEnemy(enemies: Set<Enemy>) {
@@ -126,6 +126,11 @@ export class BasicGun extends PlayerWeapon {
 
     onBulletOverlap(enemy: Enemy, bullet: BasicBullet) {
         enemy.damage(bullet.getPower());
+
+        // only this one have null pointer error, not sword proc
+        if (!enemy.alive) {
+            this.onKillEnemy(this, enemy);
+        }
         bullet.destroy();
     }
 

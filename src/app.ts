@@ -29,6 +29,7 @@ window.onload = function () {
     let leftKey: Key;
     let rightKey: Key;
     let weaponControlKey: Key;
+    let weaponActiveKey: Phaser.DeviceButton;
 
     let player: Player;
     let weapons: PlayerWeapon[];
@@ -58,7 +59,6 @@ window.onload = function () {
         gameStarted = true;
         gameStartCreate();
         setUpKeys(game.input.keyboard, player);
-
     }
 
     function update() {
@@ -114,6 +114,7 @@ window.onload = function () {
 
         player.controllPlayer(upKey, downKey, leftKey, rightKey);
 
+        checkWeaponActive();
         checkSwitchUnderControlWeapons();
 
         checkCollisions()
@@ -136,6 +137,14 @@ window.onload = function () {
             const curRad = curUnderControl.getRadiusAngleToOwner();
             curUnderControl.setRadiusAngleToOwner(next.getRadiusAngleToOwner());
             next.setRadiusAngleToOwner(curRad);
+        }
+    }
+
+    function checkWeaponActive() {
+        if (weaponActiveKey.isDown) {
+            const curUnderControlIdx = _.findIndex(_.map(weapons, w => w.isUnderDirectControl()), e => e);
+            const curUnderControl = weapons[curUnderControlIdx];
+            curUnderControl.activeSpecial();
         }
     }
 
@@ -166,7 +175,7 @@ window.onload = function () {
         leftKey = keyboard.addKey(Phaser.Keyboard.A);
         rightKey = keyboard.addKey(Phaser.Keyboard.D);
         weaponControlKey = keyboard.addKey(Phaser.Keyboard.TAB);
-
+        weaponActiveKey = game.input.activePointer.leftButton;
     }
 
 };

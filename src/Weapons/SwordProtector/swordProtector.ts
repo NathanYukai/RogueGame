@@ -107,6 +107,7 @@ export class SwordProtector extends PlayerWeapon {
 
     // special attack doesn't charge the sword
     onOverlapWithEnemy(weapon: SwordProtector, enemy: Sprite) {
+        super.onOverlapWithEnemy(weapon, enemy);
         switch (weapon.state) {
             case swordState.READY:
                 weapon.state = swordState.ATTACK;
@@ -129,6 +130,10 @@ export class SwordProtector extends PlayerWeapon {
                 weapon.killCount++;
             }
         }
+
+        if (!enemy.alive) {
+            super.onKillEnemy(weapon, enemy);
+        }
     }
 
     onPowerUpgrade(amount: number) {
@@ -138,8 +143,7 @@ export class SwordProtector extends PlayerWeapon {
     private speedUpgradePtr = 0;
     onSpeedUpgrade(amount: number) {
         const upgradeAmount = upgradeAccordingly(UPGRADE_SWORD_SPEED_AMOUNTS, this.speedUpgradePtr);
-        this.coolDownInFrame = Math.max(UPGRADE_SWORD_SPEED_MIN,
-            this.coolDownInFrame - upgradeAmount);
+        this.coolDownInFrame = Math.max(UPGRADE_SWORD_SPEED_MIN, this.coolDownInFrame - upgradeAmount);
         this.speedUpgradePtr += amount;
     }
 
