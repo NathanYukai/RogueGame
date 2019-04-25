@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser-ce'
-import { PLAYER_DEFAULT_HP, PLAYER_HP_BAR_MAX_LENGTH, PLAYER_DEFAULT_SPEED, PLAYER_DEFAULT_MP } from './Configs/config';
+import { PLAYER_DEFAULT_HP, PLAYER_HP_BAR_MAX_LENGTH, PLAYER_DEFAULT_SPEED, PLAYER_DEFAULT_MP, PLAYER_DEFAULT_MANA_GAIN_CHANCE } from './Configs/config';
+import { rollHundred } from './utils';
 
 export interface IWeaponOwner extends Phaser.Sprite {
     onWeaponActive: (m: number) => void;
@@ -94,7 +95,8 @@ export class Player extends Phaser.Sprite implements IWeaponOwner {
     }
 
     onKillEnemy(emey: Phaser.Sprite) {
-        this.mana = Math.min(this.maxMana, this.mana + 5);
+        if (rollHundred() < PLAYER_DEFAULT_MANA_GAIN_CHANCE) {
+            this.mana = Math.min(this.maxMana, this.mana + 5);
+        }
     }
-
 }

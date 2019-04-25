@@ -40,6 +40,10 @@ export function myAngleBetween(a: { x: number, y: number }, b: { x: number, y: n
     return Math.atan2(b.y - a.y, b.x - a.x);
 }
 
+export function rollHundred() {
+    return Math.random() * 100
+}
+
 const secondWave = 50;
 const thirdWave = 120;
 

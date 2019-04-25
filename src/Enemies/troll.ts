@@ -2,7 +2,7 @@ import { Sprite } from 'phaser-ce';
 import { Player } from '../player';
 import { Enemy } from './enemy';
 import { PowerPickUp } from '../powerPickUp';
-import { rpgItemSpriteKey } from '../utils';
+import { rpgItemSpriteKey, rollHundred } from '../utils';
 import { rpgItem } from '../rpgItemEnum';
 import { pickupGroup } from '../globals';
 import { Pickup } from '../pickup';
@@ -19,10 +19,10 @@ export class Troll extends Enemy {
 
     kill(): Sprite {
         super.kill();
-        const roll = Math.random() * 100
+        const roll = rollHundred();
         const drop = roll < this.dropChanceInHundred;
         if (drop) {
-            const determin = Math.random() * 100;
+            const determin = rollHundred();
             let pickup: Pickup;
             if (determin < TROLL_POWER_DROP_THRESH) {
                 pickup = new PowerPickUp(this.game, this.x, this.y,
