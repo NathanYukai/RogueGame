@@ -1,7 +1,7 @@
 # RogueGame
 A rogue like game with rotating weapons
 
-#develop locally:
+# develop locally:
 npm install
 npm run build
 node app.js 
