@@ -11,7 +11,6 @@ import { FreezeGun } from './Weapons/FreezeGun/freezeGun';
 import { pickupGroup, dmgTextGroup, clearGlobalGroups } from './globals';
 import EnemyController from './Enemies/enemyController';
 import { WEAPON_DISTANCE_INACTIVE, WEAPON_ROTATION_SPD } from './Configs/config';
-import _ = require('underscore');
 
 window.onload = function () {
 
@@ -108,7 +107,7 @@ window.onload = function () {
 
         enemyController.update();
         player.update();
-        _.map(Array.from(dmgTextGroup), t => t.update());
+        Array.from(dmgTextGroup).map(t => t.update());
 
         //debugWeaponInfo();
 
@@ -124,7 +123,7 @@ window.onload = function () {
     function checkSwitchUnderControlWeapons() {
 
         if (weaponControlKey.justDown) {
-            const curUnderControlIdx = _.findIndex(_.map(weapons, w => w.isUnderDirectControl()), e => e);
+            const curUnderControlIdx = weapons.map( w => w.isUnderDirectControl()).findIndex(e => e);
             const curUnderControl = weapons[curUnderControlIdx];
             curUnderControl.toggleDirectControl();
             curUnderControl.setDistance(WEAPON_DISTANCE_INACTIVE);
@@ -142,7 +141,7 @@ window.onload = function () {
 
     function checkWeaponActive() {
         if (weaponActiveKey.isDown) {
-            const curUnderControlIdx = _.findIndex(_.map(weapons, w => w.isUnderDirectControl()), e => e);
+            const curUnderControlIdx = weapons.map(w => w.isUnderDirectControl()).findIndex(e => e);
             const curUnderControl = weapons[curUnderControlIdx];
             curUnderControl.activeSkill();
         }
@@ -150,7 +149,7 @@ window.onload = function () {
 
     function checkCollisions() {
         const allEnemies = enemyController.getAllEnemies();
-        _.map(weapons, w => w.weaponUpdate(allEnemies));
+        weapons.map(w => w.weaponUpdate(allEnemies));
 
         arcadePhysics.collide(Array.from(allEnemies), Array.from(allEnemies))
         for (let pickUp of pickupGroup) {

@@ -2,7 +2,6 @@ import { Sprite } from 'phaser-ce';
 import { PlayerWeapon } from './Weapons/playerweapon';
 import { ENEMY_DEFAULT_SPEED, ENEMY_DEFAULT_HP } from './Configs/config';
 import { IWeaponOwner } from './player';
-import _ = require('underscore');
 
 export function spreadWeaponOnRail(
     weapons: PlayerWeapon[],
@@ -10,7 +9,7 @@ export function spreadWeaponOnRail(
     distanceToOwner: number,
     spd: number,
 ) {
-    const passiveWeapons = _.filter(weapons, w => !w.isUnderDirectControl());
+    const passiveWeapons = weapons.filter(w => !w.isUnderDirectControl());
     const numOfPassiveWeapon = passiveWeapons.length;
     const gapAngle = Math.PI * 2 / numOfPassiveWeapon;
 
@@ -20,7 +19,7 @@ export function spreadWeaponOnRail(
         setWeaponPosition(w, distanceToOwner, thisAngle, player, spd);
     }
 
-    const activeWeapon = _.find(weapons, w => w.isUnderDirectControl());
+    const activeWeapon = weapons.find(w => w.isUnderDirectControl());
     setWeaponPosition(activeWeapon, distanceToOwner * 2, 0, player, spd);
 }
 
