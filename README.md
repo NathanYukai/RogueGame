@@ -1,6 +1,11 @@
 # RogueGame
 A rogue like game with rotating weapons
 
+# How to play:
+W,A,S,D to move around
+Tab will switch the weapon in control (follow your mouse)
+Left click to activate weapon in control 
+
 # develop locally:
 npm install
 
